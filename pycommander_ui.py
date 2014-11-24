@@ -6,11 +6,13 @@ from panel_manager import PanelManager
 class PyCommanderUIGenerator(QtGui.QWidget):
 
 	def __init__(self):
+		"""Initializes and creates the UI components for PyCommanderA"""
 		QtGui.QWidget.__init__(self)
 		self.init_ui()
 		self.create_components()
 
 	def init_ui(self):
+		"""Initializes the UI for PyCommanderA"""
 		palette = QtGui.QPalette()
 		palette.setColor(QtGui.QPalette.Background,QtCore.Qt.gray)
 
@@ -26,10 +28,12 @@ class PyCommanderUIGenerator(QtGui.QWidget):
 		   - Panels
 		   - Action buttons
 		"""
-		left_panel = PanelManager()
-		right_panel = PanelManager()
+		panels = PanelManager()
 
-		layout_panels = QtGui.QHBoxLayout()
-		layout_panels.addWidget(left_panel)
-		layout_panels.addWidget(right_panel)
+		layout_panels = QtGui.QVBoxLayout()
+
+		"""Adds the ListView panels for PyCommanderA"""
+		layout_panels.addLayout(panels)
+
+		"""Displays the QVBoxLayout"""
 		self.setLayout(layout_panels)
