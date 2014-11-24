@@ -2,9 +2,10 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 
-class PanelManager(QtGui.QTreeView):
+class PanelManager(QtGui.QListView):
 	def __init__(self):
 		super(PanelManager, self).__init__()
-		model = QtGui.QFileSystemModel()
-		model.setRootPath(QtCore.QDir.homePath())
-		self.setModel(model)
+		panel_model = QtGui.QFileSystemModel()
+		panel_model.setRootPath(QtCore.QDir.currentPath())
+		self.setModel(panel_model)
+		self.setRootIndex(panel_model.index(QtCore.QDir.homePath()))
