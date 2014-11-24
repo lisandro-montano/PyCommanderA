@@ -1,7 +1,7 @@
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-from panel_generator import PanelGenerator
+from panel_manager import PanelManager
 
 class PyCommanderUIGenerator(QtGui.QWidget):
 
@@ -26,8 +26,8 @@ class PyCommanderUIGenerator(QtGui.QWidget):
 		   - Panels
 		   - Action buttons
 		"""
-		left_panel = PanelGenerator()
-		right_panel = PanelGenerator()
+		left_panel = PanelManager()
+		right_panel = PanelManager()
 
 		layout_panels = QtGui.QHBoxLayout()
 		layout_panels.addWidget(left_panel)
