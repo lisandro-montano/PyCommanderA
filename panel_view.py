@@ -3,6 +3,8 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 
 from list_view import ListView
+from icons_view import IconsView
+from details_view import DetailsView
 
 class PanelView(QtGui.QWidget):
 
@@ -26,17 +28,3 @@ class PanelView(QtGui.QWidget):
 		elif type == 3:
 			self.panel = DetailsView(self.currentPath)
 
-
-
-class IconsView(ListView):
-
-	def __init__(self):
-		"""Sets the currentPath and defines the panels"""
-		super(IconsView, self).__init__(currentPath)
-
-
-class DetailsView(ListView):
-
-	def __init__(self):
-		"""Sets the currentPath and defines the panels"""
-		super(DetailsView, self).__init__(currentPath)
