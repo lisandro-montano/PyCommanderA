@@ -4,7 +4,7 @@ from PyQt4 import QtCore
 
 from panel_view import PanelView
 
-class PanelManager(QtGui.QHBoxLayout):
+class PanelManager(QtGui.QSplitter):
 
 	def __init__(self):
 		"""Initialize the ListView panels for PyCommanderA"""
