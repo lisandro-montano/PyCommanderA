@@ -34,8 +34,8 @@ class PyCommanderUIGenerator(QtGui.QWidget):
 
 		"""Adds the ListView panels for PyCommanderA"""
 
-		layout_ui.addLayout(panels)
-		layout_panels.addWidget(panels)
+		layout_ui.addWidget(panels)
+		layout_ui.addWidget(panels)
 
 		"""Displays the QVBoxLayout"""
 		self.setLayout(layout_ui)
