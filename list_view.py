@@ -15,10 +15,10 @@ class ListView(QtGui.QListView):
 
 	@QtCore.pyqtSlot(QtCore.QModelIndex)
 	def on_treeView_clicked(self, index):
-		indexItem = self.model.index(index.row(), 0, index.parent())
+		index_item = self.model.index(index.row(), 0, index.parent())
 
-		fileName = self.model.fileName(indexItem)
-		fileName = self.model.filePath(indexItem)
+		file_name = self.model.fileName(indexItem)
+		file_path = self.model.filePath(indexItem)
 
 		#self.selected_items.
-		print 'selected item index found at %s with data: %s' % (indexItem.toString(), fileName.toString(), fileName.toString())
+		print 'selected item index found at %s with data: %s' % (index_item.toString(), file_name.toString(), file_path.toString())
