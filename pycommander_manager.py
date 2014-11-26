@@ -9,7 +9,6 @@ def main():
 	app = QtGui.QApplication(sys.argv)
 
 	PyCommanderA_ui = PyCommanderUIGenerator()
-	PyCommanderA_ui.show()
 
 	sys.exit(app.exec_())
 
