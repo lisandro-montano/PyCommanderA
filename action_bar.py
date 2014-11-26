@@ -67,6 +67,6 @@ class ActionBar(QtGui.QToolBar):
 		self.addSeparator()
 		self.addWidget(spacer12)
 		self.addAction("Alt + F4 - Exit")
-		self.addWidget(spacer_rigth)
+		self.addWidget(spacer_right)
 		self.setMovable(0) 
 	
