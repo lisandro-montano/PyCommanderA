@@ -18,6 +18,7 @@ class PanelView(QtGui.QWidget):
 		v_layout = QtGui.QVBoxLayout()
 		v_layout.addWidget(self.panel)
 		self.setLayout(v_layout)
+		QtCore.QObject.connect(self.panel.selectionModel(), QtCore.SIGNAL('selectionChanged(QItemSelection, QItemSelection)'), self.panel_list_selection)
 
 	def set_list_type(self, type):
 		"""Changes the list type view"""
@@ -29,3 +30,12 @@ class PanelView(QtGui.QWidget):
 			self.panel = DetailsView(self.currentPath)
 		return self.panel
 
+	@QtCore.pyqtSlot("QItemSelection, QItemSelection")
+	def panel_list_selection(self, selected, deselected):
+		index_item = selected.index(index.row(),0,index.parent())
+
+		file_name = self.panel.setRootIndex.fileName(index_item)
+		file_path = self.panel.setRootIndex.filePath(index_item)
+
+		print(selected)
+		print(deselected)
