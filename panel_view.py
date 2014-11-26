@@ -14,12 +14,12 @@ class PanelView(QtGui.QWidget):
 		self.currentPath = QtCore.QDir.homePath()
 		self.type_list = 1
 		self.selected_items = []
-		self.panel = ListView(self.currentPath)
+		self.set_list_type(self.type_list)
 		v_layout = QtGui.QVBoxLayout()
 		v_layout.addWidget(self.panel)
 		self.setLayout(v_layout)
 
-	def change_list_type(self, type):
+	def set_list_type(self, type):
 		"""Changes the list type view"""
 		if type == 1:
 			self.panel = ListView(self.currentPath)
@@ -27,4 +27,5 @@ class PanelView(QtGui.QWidget):
 			self.panel = IconsView(self.currentPath)
 		elif type == 3:
 			self.panel = DetailsView(self.currentPath)
+		return self.panel
 

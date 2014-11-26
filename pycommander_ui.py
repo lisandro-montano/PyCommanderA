@@ -2,12 +2,13 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from panel_manager import PanelManager
+from action_bar import ActionBar
 
-class PyCommanderUIGenerator(QtGui.QWidget):
+class PyCommanderUIGenerator(QtGui.QMainWindow):
 
 	def __init__(self):
 		"""Initializes and creates the UI components for PyCommanderA"""
-		QtGui.QWidget.__init__(self)
+		super(PyCommanderUIGenerator, self).__init__()
 		self.init_ui()
 		self.create_components()
 
@@ -17,7 +18,7 @@ class PyCommanderUIGenerator(QtGui.QWidget):
 		palette.setColor(QtGui.QPalette.Background,QtCore.Qt.gray)
 
 		self.setPalette(palette)
-		self.resize(1500, 750)
+		self.resize(1500, 800)
 		self.move(100, 100)
 		self.setWindowTitle('PyCommanderA')
 
@@ -29,13 +30,11 @@ class PyCommanderUIGenerator(QtGui.QWidget):
 		   - Action buttons
 		"""
 		panels = PanelManager()
+		action_bar = ActionBar()
 
-		layout_ui = QtGui.QVBoxLayout()
+		"""Adds the components for PyCommanderA"""
 
-		"""Adds the ListView panels for PyCommanderA"""
+		self.addDockWidget(QtCore.Qt.DockWidgetArea(1), panels)
+		self.addToolBar(QtCore.Qt.ToolBarArea(8), action_bar)
 
-		layout_ui.addWidget(panels)
-		layout_ui.addWidget(panels)
-
-		"""Displays the QVBoxLayout"""
-		self.setLayout(layout_ui)
+		self.show()
