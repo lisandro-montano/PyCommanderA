@@ -22,6 +22,7 @@ class PanelToolbar(QtGui.QWidget):
 					 self.propagate_dir)
 
 	def get_volume_list(self):
+		"""Obtain volumes list and add them to combo box"""
 		dir_combo = QtGui.QComboBox(self)
 		volumes_list = QtCore.QDir.drives()
 		for x in xrange(len(volumes_list)):
@@ -30,12 +31,15 @@ class PanelToolbar(QtGui.QWidget):
 		return dir_combo
 
 	def attach(self, observer):
+		"""Attach observers to detect directory changes"""
 		if not observer in self._observers:
 			self._observers.append(observer)
 
 	def propagate_dir(self, new_dir):
+		"""Inform observers about changes in directory path"""
 		for panel_observer in self._observers:
 			panel_observer.propagate_dir(new_dir)
 
 	def update_path(self, new_path):
+		"""Update path in the toolbar when changed"""
 		self. path_edit.setText(new_path)

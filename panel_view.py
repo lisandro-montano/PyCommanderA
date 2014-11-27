@@ -55,6 +55,7 @@ class PanelView(QtGui.QWidget):
 		print(file_path)
 
 	def propagate_dir(self, new_dir):
+		"""Detect changes in directory and propagate them to proper instances"""
 		self.current_path = new_dir
 		self.panel_toolbar.update_path(self.current_path)
 		self.panel.update_path(self.current_path)

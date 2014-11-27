@@ -15,4 +15,5 @@ class ListView(QtGui.QListView):
 		self.setRootIndex(self.panel_model.index(current_path))
 
 	def update_path(self, new_path):
+		"""Update panel root index to modify after path changes"""
 		self.setRootIndex(self.panel_model.index(new_path))
