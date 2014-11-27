@@ -1,9 +1,6 @@
-<<<<<<< Updated upstream
 import os
 
-=======
->>>>>>> Stashed changes
-from PyQt4 import QtGui
+sfrom PyQt4 import QtGui
 from PyQt4 import QtCore
 
 
