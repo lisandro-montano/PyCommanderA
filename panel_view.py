@@ -18,6 +18,7 @@ class PanelView(QtGui.QWidget):
 		v_layout = QtGui.QVBoxLayout()
 		v_layout.addWidget(self.panel)
 		self.setLayout(v_layout)
+		self.panel.clicked.connect(self.panel_list_selection)
 
 	def set_list_type(self, type):
 		"""Changes the list type view"""
@@ -29,3 +30,21 @@ class PanelView(QtGui.QWidget):
 			self.panel = DetailsView(self.currentPath)
 		return self.panel
 
+	@QtCore.pyqtSlot(QtCore.QModelIndex)
+	def panel_list_selection(self, index):
+		index_item = self.panel.panel_model.index(index.row(),0,index.parent())
+
+		file_path = self.panel.panel_model.filePath(index_item)
+		file_type = self.panel.panel_model.type(index_item)
+
+		if sub_string(str(file_type)).find('Folder') >= 0:
+			print "Is folder"
+
+		if sub_string(str(file_type)).find("File") > 0:
+			print "Is file"
+
+		print(index.row())
+		print(file_path)
+
+def sub_string(string):
+	return string[-6:]
