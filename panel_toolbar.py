@@ -26,8 +26,7 @@ class PanelToolbar(QtGui.QWidget):
 		volumes_list = QtCore.QDir.drives()
 		for x in xrange(len(volumes_list)):
 			dir_combo.addItem(volumes_list[x].absolutePath())
-		dir_combo.addItem("/Users")
-		dir_combo.setFixedWidth(100)
+		dir_combo.setFixedWidth(60)
 		return dir_combo
 
 	def attach(self, observer):
