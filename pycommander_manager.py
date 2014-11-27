@@ -1,4 +1,3 @@
-
 import sys
 from PyQt4 import QtGui
 from pycommander_ui import PyCommanderUIGenerator
