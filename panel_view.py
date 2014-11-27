@@ -1,33 +1,41 @@
-
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 
 from list_view import ListView
 from icons_view import IconsView
 from details_view import DetailsView
+from panel_toolbar import PanelToolbar
 
 class PanelView(QtGui.QWidget):
 
 	def __init__(self):
-		"""Sets the currentPath and defines the panels"""
+		"""Sets the current path and defines the panels"""
 		super(PanelView, self).__init__()
-		self.currentPath = QtCore.QDir.homePath()
+		self.current_path = QtCore.QDir.rootPath()
 		self.type_list = 1
 		self.selected_items = []
+
 		self.set_list_type(self.type_list)
-		v_layout = QtGui.QVBoxLayout()
-		v_layout.addWidget(self.panel)
-		self.setLayout(v_layout)
+		
+		self.panel_toolbar = PanelToolbar(self.current_path)
+		
+		self.panel_layout = QtGui.QVBoxLayout()
+		self.panel_layout.addWidget(self.panel_toolbar)
+		self.panel_layout.addWidget(self.panel)
+		self.setLayout(self.panel_layout)
+
+		self.panel_toolbar.attach(self)
+
 		self.panel.clicked.connect(self.panel_list_selection)
 
 	def set_list_type(self, type):
 		"""Changes the list type view"""
 		if type == 1:
-			self.panel = ListView(self.currentPath)
+			self.panel = ListView(self.current_path)
 		elif type == 2:
-			self.panel = IconsView(self.currentPath)
+			self.panel = IconsView(self.current_path)
 		elif type == 3:
-			self.panel = DetailsView(self.currentPath)
+			self.panel = DetailsView(self.current_path)
 		return self.panel
 
 	@QtCore.pyqtSlot(QtCore.QModelIndex)
@@ -48,3 +56,9 @@ class PanelView(QtGui.QWidget):
 
 def sub_string(string):
 	return string[-6:]
+=======
+	def propagate_dir(self, new_dir):
+		self.current_path = new_dir
+		self.panel_toolbar.path_edit.setText(self.current_path)
+		self.panel.setRootIndex(self.panel.panel_model.index(self.current_path))
+>>>>>>> Stashed changes

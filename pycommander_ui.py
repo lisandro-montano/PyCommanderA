@@ -1,4 +1,3 @@
-
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from panel_manager import PanelManager

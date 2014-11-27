@@ -1,4 +1,3 @@
-
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 
@@ -11,7 +10,9 @@ class PanelManager(QtGui.QDockWidget):
 		super(PanelManager, self).__init__()
 		panel_splitter = QtGui.QSplitter()
 		left_panel = PanelView()
+		left_panel.setAccessibleName("left")
 		right_panel = PanelView()
+		right_panel.setAccessibleName("right")
 
 		panel_splitter.addWidget(left_panel)
 		panel_splitter.addWidget(right_panel)
