@@ -56,8 +56,8 @@ class PanelView(QtGui.QWidget):
 
 	def propagate_dir(self, new_dir):
 		self.current_path = new_dir
-		self.panel_toolbar.path_edit.setText(self.current_path)
-		self.panel.setRootIndex(self.panel.panel_model.index(self.current_path))
+		self.panel_toolbar.update_path(self.current_path)
+		self.panel.update_path(self.current_path)
 
 def sub_string(string):
 	return string[-6:]
