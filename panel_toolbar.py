@@ -36,3 +36,6 @@ class PanelToolbar(QtGui.QWidget):
 	def propagate_dir(self, new_dir):
 		for panel_observer in self._observers:
 			panel_observer.propagate_dir(new_dir)
+
+	def update_path(self, new_path):
+		self. path_edit.setText(new_path)
