@@ -15,4 +15,10 @@ class ListView(QtGui.QListView):
 		self.setRootIndex(self.panel_model.index(current_path))
 
 	def update_path(self, new_path):
+		"""Updating the QListView path"""
 		self.setRootIndex(self.panel_model.index(new_path))
+
+	def mousePressEvent(self, event):
+		"""Redefining the QListView mousePressEvent"""
+		self._mouse_button = event.button()
+		super(ListView, self).mousePressEvent(event)

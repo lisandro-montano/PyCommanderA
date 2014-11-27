@@ -26,6 +26,7 @@ class PanelView(QtGui.QWidget):
 
 		self.panel_toolbar.attach(self)
 
+		#Obtaining the selected item event
 		self.panel.clicked.connect(self.panel_list_selection)
 
 	def set_list_type(self, type):
@@ -40,19 +41,39 @@ class PanelView(QtGui.QWidget):
 
 	@QtCore.pyqtSlot(QtCore.QModelIndex)
 	def panel_list_selection(self, index):
-		index_item = self.panel.panel_model.index(index.row(),0,index.parent())
+		"""If right click retrieve the item information"""
+		if self.panel._mouse_button == 2:
+			index_item = self.panel.panel_model.index(index.row(),0,index.parent())
 
-		file_path = self.panel.panel_model.filePath(index_item)
-		file_type = self.panel.panel_model.type(index_item)
+			file_path = self.panel.panel_model.filePath(index_item)
+			file_type = self.panel.panel_model.type(index_item)
 
-		if sub_string(str(file_type)).find('Folder') >= 0:
-			print "Is folder"
+			if sub_string(str(file_type)).find('Folder') >= 0:
+				print "Is folder"
 
-		if sub_string(str(file_type)).find("File") > 0:
-			print "Is file"
+			if sub_string(str(file_type)).find("File") > 0:
+				print "Is file"
 
-		print(index.row())
-		print(file_path)
+			print(index.row())
+			print(file_path)
+			print index.data().toString()
+			self.select_unselect_item([index_item,file_path])
+
+		#If left click show a message about the event
+		elif self.panel._mouse_button == 1:
+			print "left click"
+
+	def select_unselect_item(self, item):
+		try:
+			array_index = self.selected_items.index(item)
+			self.selected_items.remove(item)
+			print self.selected_items
+			print "remove"
+
+		except:
+			self.selected_items.append(item)
+			print self.selected_items
+			print "add"
 
 	def propagate_dir(self, new_dir):
 		self.current_path = new_dir
