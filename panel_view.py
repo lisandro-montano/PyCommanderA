@@ -31,6 +31,7 @@ class PanelView(QtGui.QWidget):
 
 		self.panel_toolbar.attach(self)
 
+
 		#Obtaining the selected item using mouse right click event
 		self.panel.clicked.connect(self.panel_list_selection)
 
@@ -45,11 +46,6 @@ class PanelView(QtGui.QWidget):
 			self.panel = DetailsView(self.current_path)
 		return self.panel
 
-	@QtCore.pyqtSlot(QtCore.QModelIndex)
-	def space_key_pressed(self, index):
-		"""Redefining the space key press event"""
-		if e.key() == QtCore.Qt.Key_Space:
-			self.select_unselect_item
 
 	@QtCore.pyqtSlot(QtCore.QModelIndex)
 	def panel_list_selection(self, index):
