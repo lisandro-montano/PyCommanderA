@@ -17,6 +17,8 @@ class PanelToolbar(QtGui.QWidget):
 		self.panel_bar_layout.addWidget(self.dir_combo)
 		self.panel_bar_layout.addWidget(self.path_edit)
 		self.setLayout(self.panel_bar_layout)
+		self.dir_combo.setFocusPolicy(QtCore.Qt.NoFocus)
+		self.path_edit.setFocusPolicy(QtCore.Qt.ClickFocus)
 
 		self.connect(self.dir_combo, QtCore.SIGNAL('currentIndexChanged(const QString &)'),
 					 self.propagate_dir)

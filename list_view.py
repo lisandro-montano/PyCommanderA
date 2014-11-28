@@ -12,7 +12,6 @@ class ListView(QtGui.QListView):
 	def __init__(self, current_path):
 		"""Sets the current path items view as list"""
 		super(ListView, self).__init__()
-		self._observer = 0
 		self.panel_model = QtGui.QFileSystemModel()
 		self.panel_model.setRootPath(current_path)
 		self.setModel(self.panel_model)

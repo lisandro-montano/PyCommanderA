@@ -23,7 +23,6 @@ class PanelView(QtGui.QWidget):
 		self.set_list_type(self.type_list)
 		
 		self.panel_toolbar = PanelToolbar(self.current_path)
-		
 		self.panel_layout = QtGui.QVBoxLayout()
 		self.panel_layout.addWidget(self.panel_toolbar)
 		self.panel_layout.addWidget(self.panel)
@@ -31,10 +30,8 @@ class PanelView(QtGui.QWidget):
 
 		self.panel_toolbar.attach(self)
 
-
 		#Obtaining the selected item using mouse right click event
 		self.panel.clicked.connect(self.panel_list_selection)
-
 
 	def set_list_type(self, type):
 		"""Changes the list type view"""
@@ -46,14 +43,13 @@ class PanelView(QtGui.QWidget):
 			self.panel = DetailsView(self.current_path)
 		return self.panel
 
-
 	@QtCore.pyqtSlot(QtCore.QModelIndex)
 	def panel_list_selection(self, index):
 		"""According to the mouse event the action is performed"""
 		mouse_right_click_event = 2
 		mouse_left_click_event = 1
 
-		#If right click retrieve the item information"""
+		#If right click retrieve the item information
 		if self.panel._mouse_button == mouse_right_click_event:
 			self.select_unselect_item(index)
 
@@ -71,7 +67,6 @@ class PanelView(QtGui.QWidget):
 		except:
 			self.selected_items.append(index)
 			self.panel.selectionModel().select(index, QtGui.QItemSelectionModel.Select)
-
 
 	def file_data(self, index, data):
 		index_item = self.panel.panel_model.index(index.row(),0,index.parent())

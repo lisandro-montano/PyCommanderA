@@ -19,3 +19,4 @@ class PanelManager(QtGui.QDockWidget):
 
 		self.setWidget(panel_splitter)
 		self.setFeatures(QtGui.QDockWidget.NoDockWidgetFeatures)
+		self.setTabOrder(left_panel.panel, right_panel.panel)
