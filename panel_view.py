@@ -9,7 +9,7 @@ from details_view import DetailsView
 from panel_toolbar import PanelToolbar
 
 from PyQt4.QtGui import QItemDelegate, QPen, QStyle, QBrush
-from PyQt4.QtCore import SIGNAL
+from PyQt4.QtCore import SIGNAL, QEvent, Qt
 
 class PanelView(QtGui.QWidget):
 
@@ -18,7 +18,6 @@ class PanelView(QtGui.QWidget):
 		super(PanelView, self).__init__()
 		self.current_path = QtCore.QDir.rootPath()
 		self.type_list = 1
-		self.selected_items = []
 
 		self.set_list_type(self.type_list)
 		
@@ -30,9 +29,6 @@ class PanelView(QtGui.QWidget):
 
 		self.panel_toolbar.attach(self)
 
-		#Obtaining the selected item using mouse right click event
-		self.panel.clicked.connect(self.panel_list_selection)
-
 	def set_list_type(self, type):
 		"""Changes the list type view"""
 		if type == 1:
@@ -42,31 +38,6 @@ class PanelView(QtGui.QWidget):
 		elif type == 3:
 			self.panel = DetailsView(self.current_path)
 		return self.panel
-
-	@QtCore.pyqtSlot(QtCore.QModelIndex)
-	def panel_list_selection(self, index):
-		"""According to the mouse event the action is performed"""
-		mouse_right_click_event = 2
-		mouse_left_click_event = 1
-
-		#If right click retrieve the item information
-		if self.panel._mouse_button == mouse_right_click_event:
-			self.select_unselect_item(index)
-
-		#If left click show a message about the event
-		elif self.panel._mouse_button == mouse_left_click_event:
-			self.panel.selectionModel().select(index, QtGui.QItemSelectionModel.Deselect)
-
-	def select_unselect_item(self, index):
-		"""The selected item information is saved in the array"""
-		try:
-			array_index = self.selected_items.index(index)
-			self.selected_items.remove(index)
-			self.panel.selectionModel().select(index, QtGui.QItemSelectionModel.Deselect)
-
-		except:
-			self.selected_items.append(index)
-			self.panel.selectionModel().select(index, QtGui.QItemSelectionModel.Select)
 
 	def file_data(self, index, data):
 		index_item = self.panel.panel_model.index(index.row(),0,index.parent())
