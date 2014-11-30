@@ -1,8 +1,10 @@
 import os
+
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from file_operations import file_data, sub_string
 from PyQt4.QtGui import QAbstractItemView, QListView
-from PyQt4.QtCore import QEvent, Qt, SIGNAL
+from PyQt4.QtCore import Qt
 
 class ListView(QtGui.QListView):
 	def __init__(self, current_path):
@@ -54,6 +56,7 @@ class ListView(QtGui.QListView):
 			#If the left clicked item was already selected the prompt is launched
 			if len(self.selected_items)== 1 and index == self.selected_items[0] and self.removed == 1:
 				print "File changed and unselected"
+				self.rename_dialog(index)
 			#If not all the right selected items are removed from the list, and is selected the left clicked item"
 			else:
 				#Remove all the already selected items
@@ -63,3 +66,17 @@ class ListView(QtGui.QListView):
 				self.removed = 1
 		
 		self.verify_selected_items()
+
+	def rename_dialog(self, index):
+		current_file_name = str(file_data(self,index,"Name"))
+		current_file_path = str(file_data(self,index,"Path"))
+		text, ok = QtGui.QInputDialog.getText(self, 'Rename Dialog', 'Modify the file/folder name:',
+											  QtGui.QLineEdit.Normal, current_file_name)
+
+		if ok and current_file_path != text:
+			os.rename(current_file_path,self.rename_replace_path(current_file_path,current_file_name,text))
+
+	def rename_replace_path(self,current_path,name,new_name):
+		"""This method structure the new file path considering the new name introduced"""
+		temp = sub_string(current_path,"right",-len(name))
+		return temp + new_name
