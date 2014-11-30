@@ -15,20 +15,23 @@ def file_data(panel, index, data):
         return panel.model().fileInfo(index_item)
 
     elif data == "Type":
-        return panel.model().fileInfo(index_item)
+        return panel.model().type(index_item)
 
 def isFileFolder(panel, index):
     """Returns 1 if file and returns 0 if folder"""
-    file_type = panel.file_data(index, "Type")
-    if panel.sub_string(str(file_type,"left",-6)).find('Folder') >= 0:
-        return 0
-    elif panel.sub_string(str(file_type,"left", -4)).find("File") >= 0:
-        return 1
+    file_type = file_data(panel, index, "Type")
+    if sub_string(str(file_type),"left",-6).find('Folder') >= 0:
+        return 'Folder'
+    elif sub_string(str(file_type),"left", -4).find("File") >= 0:
+        print sub_string(str(file_type),"left",-4).find('Folder')
+        return "File"
 
 def rename_dialog(panel, index):
     current_file_name = str(file_data(panel,index,"Name"))
     current_file_path = str(file_data(panel,index,"Path"))
-    text, ok = QtGui.QInputDialog.getText(panel, 'Rename Dialog', 'Modify the file/folder name:',
+    current_type = isFileFolder(panel,index)
+    text, ok = QtGui.QInputDialog.getText(panel, 'Rename %s Dialog' % current_type,
+                                          'Modify the %s name:' % current_type,
                                           QtGui.QLineEdit.Normal, current_file_name)
 
     if ok and current_file_path != text:

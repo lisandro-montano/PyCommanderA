@@ -10,6 +10,7 @@ class ListView(QtGui.QListView):
 		"""Sets the current path items view as list"""
 		super(ListView, self).__init__()
 		self.selected_items = []
+		self.removed = 0
 		self.panel_model = QtGui.QFileSystemModel()
 		self.panel_model.setRootPath(current_path)
 		self.setModel(self.panel_model)
@@ -34,9 +35,16 @@ class ListView(QtGui.QListView):
 		if (key_event.key()==Qt.Key_Space):
 			self.verify_selected_items()
 
-		if (key_event.key()==Qt.Key_F7 and len(self.selectedIndexes()) == 1):
+		if key_event.key() == Qt.Key_F4 and len(self.selectedIndexes()) == 1:
 			rename_dialog(self,self.selectedIndexes()[0])
 
+		if key_event.key() == Qt.Key_F4 and len(self.selectedIndexes()) == 0:
+			rename_dialog(self,self.currentIndex())
+
+		if key_event.key() == Qt.Key_F4 and len(self.selectedIndexes()) > 1:
+			#Unselect all the files and enable the rename current index file
+			self.selectionModel().clearSelection()
+			rename_dialog(self,self.currentIndex())
 
 	def verify_selected_items(self):
 		#Verify if the selected items are equal to selected_items array
@@ -52,23 +60,26 @@ class ListView(QtGui.QListView):
 
 		# If right click retrieve the item information
 		if self._mouse_button == mouse_right_click_event:
-			self.selectionModel().select(index, QtGui.QItemSelectionModel.Select)
+			try:
+				if self.selected_items.index(index) >= 0:
+					self.selectionModel().select(index, QtGui.QItemSelectionModel.Deselect)
+			except:
+				self.selectionModel().select(index, QtGui.QItemSelectionModel.Select)
 
 		#If left click show a message about the event
 		elif self._mouse_button == mouse_left_click_event:
 			#If the left clicked item was already selected the prompt is launched
-			if len(self.selected_items)== 1 and index == self.selected_items[0] and self.removed == 1:
+			if len(self.selected_items)== 1 and index == self.selected_items[0]:
 				#File changed and unselected
 				rename_dialog(self, index)
 			
 			#If not all the right selected items are removed from the list, and is selected the left clicked item"
-			else:
+			elif len(self.selected_items)>= 1:
 				#Remove all the already selected items
 				self.selectionModel().clearSelection()
 				#Select the left clicked item
 				self.selectionModel().select(index, QtGui.QItemSelectionModel.Select)
-				self.removed = 1
-		
+
 		self.verify_selected_items()
 
 
