@@ -1,4 +1,4 @@
-import sys
+import sys, os
 
 from PyQt4 import QtGui
 
@@ -24,6 +24,20 @@ def isFileFolder(panel, index):
         return 0
     elif panel.sub_string(str(file_type,"left", -4)).find("File") >= 0:
         return 1
+
+def rename_dialog(panel, index):
+    current_file_name = str(file_data(panel,index,"Name"))
+    current_file_path = str(file_data(panel,index,"Path"))
+    text, ok = QtGui.QInputDialog.getText(panel, 'Rename Dialog', 'Modify the file/folder name:',
+                                          QtGui.QLineEdit.Normal, current_file_name)
+
+    if ok and current_file_path != text:
+        os.rename(current_file_path,rename_replace_path(current_file_path,current_file_name,text))
+
+def rename_replace_path(current_path,name,new_name):
+    """This method structure the new file path considering the new name introduced"""
+    temp = sub_string(current_path,"right",-len(name))
+    return temp + new_name
 
 def sub_string(string,side,quantity):
     if side == "left":
