@@ -5,7 +5,7 @@ from PyQt4 import QtCore
 
 from views.view_styles.list_view import ListView
 from views.view_styles.icons_view import IconsView
-from views.view_styles.details_view import DetailsView
+from views.view_styles.detailed_view import DetailedView
 from views.menus_toolbars.panel_toolbar import PanelToolbar
 
 from PyQt4.QtGui import QItemDelegate, QPen, QStyle, QBrush
