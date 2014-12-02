@@ -55,4 +55,3 @@ class PanelView(QtGui.QWidget):
 		self.current_path = new_dir
 		self.panel_toolbar.update_path(self.current_path)
 		self.panel.update_path(self.current_path)
-

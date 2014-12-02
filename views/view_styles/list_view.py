@@ -15,7 +15,7 @@ class ListView(QtGui.QTableView):
 		self.removed = 0
 		self.panel_model = BaseItem(current_path)
 		self.setModel(self.panel_model)
-		self.setRootIndex(self.model().index(current_path))
+		self.setRootIndex(self.panel_model.index(current_path))
 		self.setSelectionMode(QAbstractItemView.MultiSelection)
 		self.set_list_format()
 
@@ -50,7 +50,8 @@ class ListView(QtGui.QTableView):
 		Params:
 		- new_path: receives the new path e.g. "C:\example_dir\"
 		"""
-		self.setRootIndex(self.model().index(new_path))
+		self.setRootIndex(self.panel_model.index(new_path))
+		self.panel_model.setRootPath(new_path)
 
 	def mousePressEvent(self, event):
 		"""Redefining the QTableView mousePressEvent
