@@ -1,7 +1,7 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-from panel_manager import PanelManager
-from action_bar import ActionBar
+from views.panels.panel_manager import PanelManager
+from views.menus_toolbars.action_bar import ActionBar
 
 class PyCommanderUIGenerator(QtGui.QMainWindow):
 
@@ -31,9 +31,7 @@ class PyCommanderUIGenerator(QtGui.QMainWindow):
 		panels = PanelManager()
 		action_bar = ActionBar()
 
-		"""Adds the components for PyCommanderA"""
-
-		self.addDockWidget(QtCore.Qt.DockWidgetArea(1), panels)
-		self.addToolBar(QtCore.Qt.ToolBarArea(8), action_bar)
+		self.setCentralWidget(panels)
+		self.addDockWidget(QtCore.Qt.DockWidgetArea(8), action_bar)
 
 		self.show()

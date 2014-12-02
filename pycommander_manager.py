@@ -1,6 +1,7 @@
 import sys
+
 from PyQt4 import QtGui
-from pycommander_ui import PyCommanderUIGenerator
+from views.init_ui.pycommander_ui import PyCommanderUIGenerator
 
 def main():
 	"""Initialize application and generate UI for PyCommanderA"""

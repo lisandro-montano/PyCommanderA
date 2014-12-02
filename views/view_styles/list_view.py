@@ -1,7 +1,7 @@
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-from file_operations import rename_dialog
+from items_management.file_operations import rename_dialog
 from PyQt4.QtGui import QAbstractItemView, QListView
 from PyQt4.QtCore import Qt
 
@@ -21,7 +21,12 @@ class ListView(QtGui.QListView):
 		self.clicked.connect(self.panel_list_selection)
 
 	def update_path(self, new_path):
-		"""Update panel root index to modify after path changes"""
+		"""Update panel root index to modify after path changes
+		Triggered by:
+		- Toolbar combo box
+		- Path editable field
+		- Double click on panel folders
+		"""
 		self.setRootIndex(self.panel_model.index(new_path))
 
 	def mousePressEvent(self, event):
