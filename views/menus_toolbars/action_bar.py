@@ -28,11 +28,20 @@ class ActionBar(QtGui.QDockWidget):
 		self.setFeatures(QtGui.QDockWidget.NoDockWidgetFeatures)
 
 	def create_buttons(self):
-		"""Create buttons required for actions bar"""
+		"""Create buttons required for actions bar
+		Apply click focus to ensure tab only works with panels
+		"""
 		self.view_button = QtGui.QPushButton("F3 - View")
+		self.view_button.setFocusPolicy(QtCore.Qt.ClickFocus)
 		self.rename_button = QtGui.QPushButton("F4 - Rename")
+		self.rename_button.setFocusPolicy(QtCore.Qt.ClickFocus)
 		self.copy_button = QtGui.QPushButton("F5 - Copy")
+		self.copy_button.setFocusPolicy(QtCore.Qt.ClickFocus)
 		self.move_button = QtGui.QPushButton("F6 - Move")
+		self.move_button.setFocusPolicy(QtCore.Qt.ClickFocus)
 		self.new_file_button = QtGui.QPushButton("F7 - New File")
+		self.new_file_button.setFocusPolicy(QtCore.Qt.ClickFocus)
 		self.delete_button = QtGui.QPushButton("F8 - Delete")
+		self.delete_button.setFocusPolicy(QtCore.Qt.ClickFocus)
 		self.exit_button = QtGui.QPushButton("Alt + F4 - Exit")
+		self.exit_button.setFocusPolicy(QtCore.Qt.ClickFocus)
