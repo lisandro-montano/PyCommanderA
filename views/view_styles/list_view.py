@@ -2,6 +2,7 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from items_management.item_operations import ItemOperations
+from items_management.base_item import BaseItem
 from PyQt4.QtGui import QAbstractItemView, QTableView
 from PyQt4.QtCore import Qt
 
@@ -12,8 +13,7 @@ class ListView(QtGui.QTableView):
 		self.item_operations=ItemOperations()
 		self.selected_items = []
 		self.removed = 0
-		self.panel_model = QtGui.QFileSystemModel()
-		self.panel_model.setRootPath(current_path)
+		self.panel_model = BaseItem(current_path)
 		self.setModel(self.panel_model)
 		self.setRootIndex(self.model().index(current_path))
 		self.setSelectionMode(QAbstractItemView.MultiSelection)
