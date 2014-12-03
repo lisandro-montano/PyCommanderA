@@ -45,6 +45,9 @@ class ListView(QtGui.QTableView):
 		self.hideColumn(DATE_COLUMN)
 		self.hideColumn(KIND_COLUMN)
 
+		#Disable tab key navigation for table items to have it available only at panel level
+		self.setTabKeyNavigation(False)
+
 	def update_path(self, new_path):
 		"""Update panel root index to modify after path changes
 		Triggered by:
