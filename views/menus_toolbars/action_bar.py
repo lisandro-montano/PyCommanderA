@@ -12,6 +12,7 @@ class ActionBar(QtGui.QDockWidget):
 		"""
 		super(ActionBar, self).__init__()
 		self.create_buttons()
+		self._observers = []
 		
 		self.buttons_bar = QtGui.QWidget()
 		self.buttons_layout = QtGui.QHBoxLayout()
@@ -30,7 +31,7 @@ class ActionBar(QtGui.QDockWidget):
 
 	def create_buttons(self):
 		"""Create buttons required for actions bar
-		Apply click focus to ensure tab only works with panels
+		Apply no focus to ensure tab only works with panels
 		"""
 		self.view_button = QtGui.QPushButton("F3 - View")
 		self.view_button.setFocusPolicy(QtCore.Qt.NoFocus)
@@ -48,7 +49,19 @@ class ActionBar(QtGui.QDockWidget):
 		self.exit_button.setFocusPolicy(QtCore.Qt.NoFocus)
 
 	def buttons_listener(self):
-		self.connect(self.copy_button, QtCore.SIGNAL('clicked()'), self.copy_item)
+		self.connect(self.copy_button, QtCore.SIGNAL('clicked()'), self.propagate_action)
 
-	def copy_item(self):
-		print("Copy button pressed")
+	def attach(self, observer):
+		"""Attach observers to detect action triggers"""
+		if not observer in self._observers:
+			self._observers.append(observer)
+
+	def propagate_action(self, pressed_button):
+		"""Inform observers about actions that were triggered
+
+		Params:
+		- item_action: defines the action that will be triggered e.g. "Move", "Copy" or "Delete"
+		"""
+		for panel_observer in self._observers:
+			panel_observer.propagate_action(pressed_button)
+		print pressed_button

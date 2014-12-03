@@ -30,7 +30,7 @@ class PyCommanderUIGenerator(QtGui.QMainWindow):
 		"""
 		self.panels = PanelManager()
 		self.action_bar = ActionBar()
-		#self.action_bar.attach(self)
+		self.action_bar.attach(self)
 
 		self.setCentralWidget(self.panels)
 		self.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.action_bar)
