@@ -1,0 +1,2 @@
+from panel_manager import PanelManager
+from panel_view import PanelView
