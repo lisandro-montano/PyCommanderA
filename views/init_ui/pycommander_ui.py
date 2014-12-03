@@ -28,10 +28,11 @@ class PyCommanderUIGenerator(QtGui.QMainWindow):
 		   - Panels
 		   - Action buttons
 		"""
-		panels = PanelManager()
-		action_bar = ActionBar()
+		self.panels = PanelManager()
+		self.action_bar = ActionBar()
+		#self.action_bar.attach(self)
 
-		self.setCentralWidget(panels)
-		self.addDockWidget(QtCore.Qt.DockWidgetArea(8), action_bar)
+		self.setCentralWidget(self.panels)
+		self.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.action_bar)
 
 		self.show()
