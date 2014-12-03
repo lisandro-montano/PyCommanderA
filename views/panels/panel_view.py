@@ -51,6 +51,10 @@ class PanelView(QtGui.QWidget):
 		- Updates current_path
 		- Updates toolbar for proper panel
 		- Updates panel view
+
+		Params:
+		- new_dir: modified path obtained from combo box, path_edit or panel in order
+		to modify current panel list of items e.g "/Users" "C:\Users"
 		"""
 		self.current_path = new_dir
 		self.panel_toolbar.update_path(self.current_path)
