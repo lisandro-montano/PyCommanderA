@@ -1,23 +1,28 @@
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-from items_management.item_operations import ItemOperations
 from items_management.base_item import BaseItem
 from PyQt4.QtGui import QAbstractItemView, QTableView
 from PyQt4.QtCore import Qt
 
 class ListView(QtGui.QTableView):
 	def __init__(self, current_path):
-		"""Sets the current path items view as list"""
+		"""Sets the current path items view as list
+
+		Params:
+		- current_path: receives the path to be set as current e.g. "C:\"
+		"""
 		super(ListView, self).__init__()
-		self.item_operations=ItemOperations()
 		self.selected_items = []
-		self.removed = 0
 		self.panel_model = BaseItem(current_path)
 		self.setModel(self.panel_model)
 		self.setRootIndex(self.panel_model.index(current_path))
 		self.setSelectionMode(QAbstractItemView.MultiSelection)
+		TABLE_VIEW_COLUMN_NUMBER = 0
+		TABLE_VIEW_ROW_NUMBER = 0
+		TABLE_VIEW_PARENT = self.selectionModel().currentIndex().parent()
 		self.set_list_format()
+		self.model().index(TABLE_VIEW_ROW_NUMBER, TABLE_VIEW_COLUMN_NUMBER, TABLE_VIEW_PARENT)
 
 		# Obtaining the selected item using mouse click event
 		self.clicked.connect(self.panel_list_selection)
@@ -72,34 +77,38 @@ class ListView(QtGui.QTableView):
 
 		#According to the item selection status it's selected/unselected
 		#with the space bar
-		if (key_event.key()==Qt.Key_Space):
+		if key_event.key() == Qt.Key_Space:
 			self.update_selected_items()
 
 		#With the following ifs are capture the F4 key events execute the
 		#corresponding actions
 		if key_event.key() == Qt.Key_F4 and len(self.selectedIndexes()) == 1:
 			#When there is only one selected item, the selected item will be renamed
-			ItemOperations.rename_dialog(self,self.selectedIndexes()[0])
+			self.rename_dialog(self.selectedIndexes()[0])
 
 		if key_event.key() == Qt.Key_F4 and len(self.selectedIndexes()) == 0:
 			#When there is no selected item, the item that has the cursor over will be renamed
-			self.item_operations.rename_dialog(self,self.currentIndex())
+			self.rename_dialog(self.currentIndex())
 
 		if key_event.key() == Qt.Key_F4 and len(self.selectedIndexes()) > 1:
 			#When there are more than one selected item, all of them will be unselected
 			#and the item where the cursor is over will be renamed
 			self.selectionModel().clearSelection()
-			self.item_operations.rename_dialog(self,self.currentIndex())
+			self.rename_dialog(self.currentIndex())
 
 	def update_selected_items(self):
 		"""The current selected items indexes are saved in self.selected_items list"""
 		items_selected_list = self.selectedIndexes()
-		if (self.selected_items != items_selected_list):
+		if self.selected_items != items_selected_list:
 			self.selected_items = items_selected_list
 
 	@QtCore.pyqtSlot(QtCore.QModelIndex)
 	def panel_list_selection(self, index):
-		"""This method helps to perform the correct action, according to the mouse event"""
+		"""This method helps to perform the correct action, according to the mouse event
+
+		Params:
+		- index: receives the item index over which the actions will be performed
+		"""
 		MOUSE_RIGHT_CLICK_EVENT = 2
 		MOUSE_LEFT_CLICK_EVENT = 1
 
@@ -110,12 +119,12 @@ class ListView(QtGui.QTableView):
 		#If left click show a message about the event
 		elif self._mouse_button == MOUSE_LEFT_CLICK_EVENT:
 			#If the left clicked item was already selected the prompt is launched
-			if len(self.selected_items)== 1 and index == self.selected_items[0]:
+			if len(self.selected_items) == 1 and index == self.selected_items[0]:
 				#File changed and unselected
-				self.item_operations.rename_dialog(self, index)
+				self.rename_dialog(index)
 			
 			#If not all the right selected items are removed from the list, and is selected the left clicked item"
-			elif len(self.selected_items)>= 1:
+			elif len(self.selected_items) >= 1:
 				#Remove all the already selected items
 				self.selectionModel().clearSelection()
 				#Select the left clicked item
@@ -146,3 +155,23 @@ class ListView(QtGui.QTableView):
 			self.selectionModel().select(index, QtGui.QItemSelectionModel.Select)
 		elif change_status_item == "Deselect":
 			self.selectionModel().select(index, QtGui.QItemSelectionModel.Deselect)
+
+	def rename_dialog(self, index):
+		"""Launch an input dialog where the current item name to be renamed is displayed
+		Actions:
+		- After press Ok button the item is renamed if the name was modified.
+		- After press Cancel button the item name is not changed.
+
+		Params:
+		- panel: list_view object
+		- index: selected item index
+		"""
+		current_item_name = str(self.model().get_item_data(index, "Name"))
+		current_item_path = str(self.model().get_item_data(index, "Path"))
+		current_type = self.model().get_item_type(index)
+		new_name, ok = QtGui.QInputDialog.getText(self, 'Rename %s Dialog' % current_type,
+												  'Modify the %s name:' % current_type,
+												  QtGui.QLineEdit.Normal, current_item_name)
+
+		if ok:
+			self.model().item_operations.rename_item(current_item_path, current_item_name, new_name)
