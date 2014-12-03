@@ -26,6 +26,7 @@ class ActionBar(QtGui.QDockWidget):
 		self.buttons_bar.setLayout(self.buttons_layout)
 		self.setWidget(self.buttons_bar)
 		self.setFeatures(QtGui.QDockWidget.NoDockWidgetFeatures)
+		self.buttons_listener()
 
 	def create_buttons(self):
 		"""Create buttons required for actions bar
@@ -45,3 +46,9 @@ class ActionBar(QtGui.QDockWidget):
 		self.delete_button.setFocusPolicy(QtCore.Qt.ClickFocus)
 		self.exit_button = QtGui.QPushButton("Alt + F4 - Exit")
 		self.exit_button.setFocusPolicy(QtCore.Qt.ClickFocus)
+
+	def buttons_listener(self):
+		self.connect(self.copy_button, QtCore.SIGNAL('clicked()'), self.copy_item)
+
+	def copy_item(self):
+		print("Copy button pressed")

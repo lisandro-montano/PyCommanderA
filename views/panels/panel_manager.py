@@ -12,14 +12,16 @@ class PanelManager(QtGui.QDockWidget):
 		"""
 		super(PanelManager, self).__init__()
 		panel_splitter = QtGui.QSplitter()
-		left_panel = PanelView()
-		left_panel.setAccessibleName("left")
-		right_panel = PanelView()
-		right_panel.setAccessibleName("right")
+		self.left_panel = PanelView()
+		self.left_panel.setAccessibleName("left")
+		self.right_panel = PanelView()
+		self.right_panel.setAccessibleName("right")
 
-		panel_splitter.addWidget(left_panel)
-		panel_splitter.addWidget(right_panel)
+		panel_splitter.addWidget(self.left_panel)
+		panel_splitter.addWidget(self.right_panel)
 
 		self.setWidget(panel_splitter)
 		self.setFeatures(QtGui.QDockWidget.NoDockWidgetFeatures)
-		self.setTabOrder(left_panel.panel, right_panel.panel)
+		self.setTabOrder(self.left_panel.panel, self.right_panel.panel)
+
+		self.left_panel.panel.setFocus()
