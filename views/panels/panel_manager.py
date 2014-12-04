@@ -39,6 +39,8 @@ class PanelManager(QtGui.QDockWidget):
 		"""
 		self.panel_operations = PanelOperations()
 		self.item_operations = ItemOperations()
+		self.origin_paths = []
+		self.target_path = ""
 
 		if self.left_panel.panel.hasFocus():
 			current_panel = self.left_panel
@@ -53,6 +55,8 @@ class PanelManager(QtGui.QDockWidget):
 
 		if action == "Copy" or action == "Move":
 			self.target_path = self.get_target_panel_path(target_panel)
+
+		self.execute_action(action)
 
 	def get_current_panel_paths(self, current_panel):
 		"""Obtain an array that includes all selected paths in the origin panel
@@ -86,6 +90,10 @@ class PanelManager(QtGui.QDockWidget):
 		target_panel_path = self.item_operations.sub_string(target_panel_full_path, "right", -len(target_panel_name))
 		
 		return target_panel_path
+
+	def execute_action(self, action):
+		if action == "Copy":
+			self.panel_operations.copy_items(self.origin_paths, self.target_path)
 
 		
 			
