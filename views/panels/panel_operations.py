@@ -13,8 +13,8 @@ class PanelOperations(object):
     	- origin_paths: List of item paths and item type to determine the method for copying it
     	- target_path: Path where all items from origint_paths will be copied to e.g "c:\"
     	"""
-    	for item_path, item_type in origin_paths:
+    	for item_path, item_name, item_type in origin_paths:
     		if item_type == "File":
     			shutil.copy2(item_path, target_path)
     		else:
-				shutil.copytree(item_path, target_path, symlinks = False, ignore = None)
+				shutil.copytree(item_path, target_path + item_name, symlinks = False, ignore = None)

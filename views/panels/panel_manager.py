@@ -68,13 +68,15 @@ class PanelManager(QtGui.QDockWidget):
 		current_panel_paths = []
 		if len(current_panel.panel.selected_items) == 0:
 			item_path = str(current_panel.panel.model().get_item_data(current_panel.panel.currentIndex(), "Path"))
+			item_name = str(current_panel.panel.model().get_item_data(current_panel.panel.currentIndex(), "Name"))
 			item_type = str(current_panel.panel.model().get_item_type(current_panel.panel.currentIndex()))
 			current_panel_paths.append((item_path, item_type))
 		else:
 			for index in current_panel.panel.selected_items:
 				item_path = str(current_panel.panel.model().get_item_data(index, "Path"))
+				item_name = str(current_panel.panel.model().get_item_data(index, "Name"))
 				item_type = str(current_panel.panel.model().get_item_type(index))
-				current_panel_paths.append((item_path, item_type))
+				current_panel_paths.append((item_path, ,item_name, item_type))
 
 		return current_panel_paths
 
