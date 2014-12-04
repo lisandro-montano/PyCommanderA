@@ -76,7 +76,7 @@ class PanelManager(QtGui.QDockWidget):
 				item_path = str(current_panel.panel.model().get_item_data(index, "Path"))
 				item_name = str(current_panel.panel.model().get_item_data(index, "Name"))
 				item_type = str(current_panel.panel.model().get_item_type(index))
-				current_panel_paths.append((item_path, ,item_name, item_type))
+				current_panel_paths.append((item_path, item_name, item_type))
 
 		return current_panel_paths
 
