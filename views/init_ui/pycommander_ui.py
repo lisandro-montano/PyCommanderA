@@ -36,3 +36,11 @@ class PyCommanderUIGenerator(QtGui.QMainWindow):
 		self.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.action_bar)
 
 		self.show()
+
+	def propagate_action(self, pressed_button):
+		"""Triggers action related to the pressed button on the focused panel
+
+		Params:
+		- pressed_button: Defines the action that will be triggered e.g. "Move", "Copy" or "Delete"
+		"""
+		self.panels.get_focused_panel(pressed_button)
