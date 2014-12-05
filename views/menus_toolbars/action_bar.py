@@ -48,6 +48,16 @@ class ActionBar(QtGui.QDockWidget):
 		self.delete_button.setFocusPolicy(QtCore.Qt.NoFocus)
 		self.exit_button = QtGui.QPushButton("Alt + F4 - Exit")
 		self.exit_button.setFocusPolicy(QtCore.Qt.NoFocus)
+		self.set_shortcuts()
+
+	def set_shortcuts(self):
+		self.view_button.setShortcut(QtCore.Qt.Key_F3)
+		self.rename_button.setShortcut(QtCore.Qt.Key_F4)
+		self.copy_button.setShortcut(QtCore.Qt.Key_F5)
+		self.move_button.setShortcut(QtCore.Qt.Key_F6)
+		self.new_file_button.setShortcut(QtCore.Qt.Key_F7)
+		self.delete_button.setShortcut(QtCore.Qt.Key_F8)
+		self.exit_button.setShortcut(QtCore.Qt.Key_Alt + QtCore.Qt.Key_F4)
 
 	def buttons_listener(self):
 		"""Trigger proper button actions and propagate it to observers"""
