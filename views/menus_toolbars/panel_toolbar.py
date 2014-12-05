@@ -62,6 +62,8 @@ class PanelToolbar(QtGui.QWidget):
 		"""
 		if new_dir == "":
 			new_dir = self.path_edit.text()
+		if new_dir[-1] != "/" and new_dir[-1] != "'\'":
+			new_dir = new_dir + "/"
 		for panel_observer in self._observers:
 			panel_observer.propagate_dir(new_dir)
 
