@@ -1,6 +1,5 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-import warnings
 
 from views.panels.panel_view import PanelView
 from views.panels.panel_operations import PanelOperations
