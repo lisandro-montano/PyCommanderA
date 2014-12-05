@@ -86,18 +86,33 @@ class PanelManager(QtGui.QDockWidget):
 		Params:
 		- target_panel: panel where item(s) will be moved or copied to e.g. left_panel 
 		"""
-		target_panel_full_path = str(target_panel.panel.model().get_item_data(target_panel.panel.currentIndex(), "Path"))
-		target_panel_name = str(target_panel.panel.model().get_item_data(target_panel.panel.currentIndex(), "Name"))
-
-		target_panel_path = self.item_operations.sub_string(target_panel_full_path, "right", -len(target_panel_name))
+		target_panel_path = str(target_panel.panel_toolbar.path_edit.text())
 		
 		return target_panel_path
 
 	def execute_action(self, action):
+		"""Execute the panel_operations action depending on the button that was pressed
+		and sending required params
+
+		Params:
+		- action: action from button pressed that will trigger proper panel_operation method e.g. "Copy"
+		"""
 		if action == "Copy":
 			self.panel_operations.copy_items(self.origin_paths, self.target_path)
 		if action == "Move":
 			self.panel_operations.move_items(self.origin_paths, self.target_path)
+		if action == "Delete":
+			self.confirm_items_deletion()
 
+	def confirm_items_deletion(self):
+		"""Launch confirmation message to ensure the user really wants to delete selecte files"""
+		self.files_to_delete = []
+		for item_path, item_name, item_type in self.origin_paths:
+			self.files_to_delete.append(item_name)
+		message = ", ".join(self.files_to_delete)
 		
-			
+		reply = QtGui.QMessageBox.question(self, "PyCommanderA",
+            "Are you sure you want to delete?\n" + message, QtGui.QMessageBox.Yes | 
+            QtGui.QMessageBox.No, QtGui.QMessageBox.No)
+		if reply == QtGui.QMessageBox.Yes:
+			self.panel_operations.delete_items(self.origin_paths)
