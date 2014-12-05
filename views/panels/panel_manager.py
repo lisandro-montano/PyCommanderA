@@ -96,6 +96,8 @@ class PanelManager(QtGui.QDockWidget):
 	def execute_action(self, action):
 		if action == "Copy":
 			self.panel_operations.copy_items(self.origin_paths, self.target_path)
+		if action == "Move":
+			self.panel_operations.move_items(self.origin_paths, self.target_path)
 
 		
 			
