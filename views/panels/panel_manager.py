@@ -33,12 +33,13 @@ class PanelManager(QtGui.QDockWidget):
 		and target_panel to execute the action
 
 		Params:
-		- action: defines the action that will be performed in the panels or panel items e.g. Move
+		- action: string that defines the action that will be performed in the panels or panel items e.g. Move
 		          an item from left panel to right panel, Copy and item from right to left panel
+		          Possible values : View, Rename, Copy, Move, Delete, New File and Exit 
 		"""
 		self.panel_operations = PanelOperations()
 		self.item_operations = ItemOperations()
-		self.origin_paths = []
+		self.origin_full_paths = []
 		self.target_path = ""
 
 		if self.left_panel.panel.hasFocus():
@@ -47,10 +48,8 @@ class PanelManager(QtGui.QDockWidget):
 		elif self.right_panel.panel.hasFocus():
 			current_panel = self.right_panel
 			target_panel = self.left_panel	
-		else:
-			print "Please, select a panel to perform the action"
 
-		self.origin_paths = self.get_current_panel_paths(current_panel)
+		self.origin_full_paths = self.get_current_panel_paths(current_panel)
 
 		if action == "Copy" or action == "Move":
 			self.target_path = self.get_target_panel_path(target_panel)
@@ -59,10 +58,12 @@ class PanelManager(QtGui.QDockWidget):
 
 	def get_current_panel_paths(self, current_panel):
 		"""Obtain an array that includes all selected paths in the origin panel
-		if no item is selected, the current index will be returne as only item in the array
+		if no item is selected, the current index will be returned as only item in the array
 
 		Params:
-		- current_panel: panel that is currently focused and where the actions will be originated
+		- current_panel: PanelView object that is currently focused and where the actions will be originated
+		- current_panel_paths: retuns the selected item paths from the current_panel in order to perform actions
+		                       on them
 		"""
 		current_panel_paths = []
 		if len(current_panel.panel.selected_items) == 0:
@@ -83,7 +84,9 @@ class PanelManager(QtGui.QDockWidget):
 		"""Obtain the target panel path in order to perform move or copy actions
 
 		Params:
-		- target_panel: panel where item(s) will be moved or copied to e.g. left_panel 
+		- target_panel: panel where item(s) will be moved or copied to e.g. left_panel
+		- target_panel_path: this path will be obtained from the path_edit field in the 
+		                     target panel e.g /Users/username/Documents 
 		"""
 		target_panel_path = str(target_panel.panel_toolbar.path_edit.text())
 		
@@ -96,17 +99,21 @@ class PanelManager(QtGui.QDockWidget):
 		Params:
 		- action: action from button pressed that will trigger proper panel_operation method e.g. "Copy"
 		"""
-		if action == "Copy":
-			self.panel_operations.copy_items(self.origin_paths, self.target_path)
-		if action == "Move":
-			self.panel_operations.move_items(self.origin_paths, self.target_path)
-		if action == "Delete":
+		COPY_ITEMS = "Copy"
+		MOVE_ITEMS = "Move"
+		DELETE_ITEMS = "Delete"
+
+		if action == COPY_ITEMS:
+			self.panel_operations.copy_items(self.origin_full_paths, self.target_path)
+		if action == MOVE_ITEMS:
+			self.panel_operations.move_items(self.origin_full_paths, self.target_path)
+		if action == DELETE_ITEMS:
 			self.confirm_items_deletion()
 
 	def confirm_items_deletion(self):
 		"""Launch confirmation message to ensure the user really wants to delete selecte files"""
 		self.files_to_delete = []
-		for item_path, item_name, item_type in self.origin_paths:
+		for item_path, item_name, item_type in self.origin_full_paths:
 			self.files_to_delete.append(item_name)
 		message = ", ".join(self.files_to_delete)
 		
@@ -114,4 +121,4 @@ class PanelManager(QtGui.QDockWidget):
             "Are you sure you want to delete?\n" + message, QtGui.QMessageBox.Yes | 
             QtGui.QMessageBox.No, QtGui.QMessageBox.No)
 		if reply == QtGui.QMessageBox.Yes:
-			self.panel_operations.delete_items(self.origin_paths)
+			self.panel_operations.delete_items(self.origin_full_paths)

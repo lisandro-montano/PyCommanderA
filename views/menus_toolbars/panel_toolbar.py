@@ -62,6 +62,8 @@ class PanelToolbar(QtGui.QWidget):
 		"""
 		if new_dir == "":
 			new_dir = self.path_edit.text()
+		#Detect if path_edit is properly finished in order to avoid problems while moving
+		#or copying items 
 		if new_dir[-1] != "/" and new_dir[-1] != "'\'":
 			new_dir = new_dir + "/"
 		
