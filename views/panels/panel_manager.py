@@ -108,6 +108,7 @@ class PanelManager(QtGui.QDockWidget):
 		MOVE_ITEMS = "Move"
 		DELETE_ITEMS = "Delete"
 		CREATE_FILES = "New File"
+		RENAME_ITEMS = "Rename"
 
 		if action == COPY_ITEMS:
 			self.panel_operations.copy_items(self.origin_full_paths, self.target_path)
@@ -117,6 +118,8 @@ class PanelManager(QtGui.QDockWidget):
 			self.confirm_items_deletion()
 		if action == CREATE_FILES:
 			self.new_file_dialog()
+		if action == RENAME_ITEMS:
+			self.rename_item_key_event()
 
 	def confirm_items_deletion(self):
 		"""Launch confirmation message to ensure the user really wants to delete selected files"""
@@ -144,3 +147,14 @@ class PanelManager(QtGui.QDockWidget):
 		elif ok != False:
 			QtGui.QMessageBox.information(self, "Error Message",
 									"There is a file with the same introduced name. No new file was created.")
+
+	def rename_item_key_event(self):
+		"""With the following ifs are capture the F4 key events execute the corresponding actions"""
+		if len(self.current_panel.panel.selectedIndexes()) == 1:
+			#When there is only one selected item, the selected item will be renamed
+			self.current_panel.panel.rename_dialog(self.selectedIndexes()[0])
+
+		if len(self.current_panel.panel.selectedIndexes()) == 0 or len(self.current_panel.panel.selectedIndexes()) > 1:
+			#When there is no selected item, the item that has the cursor over will be renamed
+			self.current_panel.panel.selectionModel().clearSelection()
+			self.current_panel.panel.rename_dialog(self.current_panel.panel.currentIndex())

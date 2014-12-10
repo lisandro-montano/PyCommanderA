@@ -76,17 +76,6 @@ class ViewOperations(QtGui.QTableView):
         if key_event.key() == Qt.Key_Space:
             self.update_selected_items()
 
-        #With the following ifs are capture the F4 key events execute the corresponding actions
-        if key_event.key() == Qt.Key_F4:
-            if len(self.selectedIndexes()) == 1:
-                #When there is only one selected item, the selected item will be renamed
-            	self.rename_dialog(self.selectedIndexes()[0])
-
-            if len(self.selectedIndexes()) == 0 or len(self.selectedIndexes()) > 1:
-            	#When there is no selected item, the item that has the cursor over will be renamed
-            	self.selectionModel().clearSelection()
-                self.rename_dialog(self.currentIndex())
-
     def update_selected_items(self):
         """The current selected items indexes are saved in self.selected_items list"""
         items_selected_list = self.selectedIndexes()
