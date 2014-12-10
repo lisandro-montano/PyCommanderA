@@ -4,6 +4,8 @@ from PyQt4 import QtCore
 from items_management.base_item import BaseItem
 from PyQt4.QtGui import QAbstractItemView, QTableView
 from PyQt4.QtCore import Qt
+from views.panels.properties_view import PropertiesView
+from views.panels.properties_group_view import PropertiesGroupView
 
 class ListView(QtGui.QTableView):
 	def __init__(self, current_path):
@@ -99,6 +101,18 @@ class ListView(QtGui.QTableView):
 			#and the item where the cursor is over will be renamed
 			self.selectionModel().clearSelection()
 			self.rename_dialog(self.currentIndex())
+
+		if (key_event.modifiers() == Qt.AltModifier and key_event.key() == Qt.Key_Return and len(self.selectedIndexes()) == 1):
+			print self.selectedIndexes()[0]
+			print self.selected_items[0]
+			#group_properties = PropertiesGroupView
+			path = r"D:\Trabajo\regextest.txt"
+			item_property = PropertiesView(self, path)
+
+		if ((key_event.modifiers() == Qt.AltModifier and key_event.key() == Qt.Key_Return) and len(self.selectedIndexes()) > 1):
+			list_files = [r"C:\Users", r"C:\Windows"]
+			group_property = PropertiesGroupView(self, list_files)
+
 
 	def update_selected_items(self):
 		"""The current selected items indexes are saved in self.selected_items list"""
