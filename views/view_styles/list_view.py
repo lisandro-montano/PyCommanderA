@@ -60,6 +60,7 @@ class ListView(QtGui.QTableView):
 		"""
 		self.setRootIndex(self.panel_model.index(new_path))
 		self.panel_model.setRootPath(new_path)
+		self.setFocus()
 
 	def mousePressEvent(self, event):
 		"""Redefining the QTableView mousePressEvent

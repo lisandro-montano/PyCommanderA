@@ -62,6 +62,11 @@ class PanelToolbar(QtGui.QWidget):
 		"""
 		if new_dir == "":
 			new_dir = self.path_edit.text()
+		#Detect if path_edit is properly finished in order to avoid problems while moving
+		#or copying items 
+		if new_dir[-1] != "/" and new_dir[-1] != "'\'":
+			new_dir = new_dir + "/"
+		
 		for panel_observer in self._observers:
 			panel_observer.propagate_dir(new_dir)
 
@@ -75,3 +80,9 @@ class PanelToolbar(QtGui.QWidget):
 		to modify current panel list of items e.g "/Users" "C:\Users"
 		"""
 		self.path_edit.setText(new_path)
+		new_path_dir = new_path[0] + ":/"
+		if new_path_dir != self.dir_combo.currentText():
+			combo_current_index = self.dir_combo.findText(new_path_dir)
+			self.dir_combo.setCurrentIndex(combo_current_index)
+			
+
