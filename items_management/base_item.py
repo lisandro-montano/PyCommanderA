@@ -56,3 +56,16 @@ class BaseItem(QtGui.QFileSystemModel):
 		elif self.item_operations.sub_string(str(file_type), "left", -4).find("File") >= 0:
 			return "File"
 
+	def rename_item(self, index, ok, new_name, current_item_name):
+		"""Requests the item rename
+
+		Params:
+		- ok: QInputDialog action, if it's True, the rename is performed
+		- index: selected item index
+		- new_name: the new item name
+		- current_item_name: the current item name
+		"""
+		current_item_path = str(self.get_item_data(index, "Path"))
+
+		if ok and new_name != current_item_name:
+			self.item_operations.rename_item(current_item_path, current_item_name, new_name)
