@@ -1,2 +1,3 @@
 from panel_manager import PanelManager
 from panel_view import PanelView
+from panel_operations import PanelOperations
