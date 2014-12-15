@@ -15,8 +15,8 @@ class ViewFile(QtGui.QMainWindow):
 		self.view_file = QtGui.QTextEdit(self)
 		self.view_file.setText(self.selected_file)
 		self.setCentralWidget(self.view_file)
-		self.compare_files()
-
+		self.highlight_word()
+		
 	def create_menubar(self):
 		save_action = QtGui.QAction('Save', self)
 		save_action.setShortcut('Ctrl+S')
@@ -33,7 +33,7 @@ class ViewFile(QtGui.QMainWindow):
 		f.write(filedata)
 		f.close()
 
-	def compare_files(self):
+	def highlight_word(self):
 		cursor = self.view_file.textCursor()
 		# Setup the desired format for matches
 		format = QtGui.QTextCharFormat()

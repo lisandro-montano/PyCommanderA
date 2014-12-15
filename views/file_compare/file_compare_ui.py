@@ -14,6 +14,7 @@ class FileCompareUI(QtGui.QMainWindow):
 		self.setCentralWidget(self.compare_panels)
 		#self.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.compare_buttons)
 		self.show()
+		self.compare_files()
 
 	def init_ui(self):
 		"""Initializes the UI for File Comparison Window"""
@@ -58,4 +59,13 @@ class FileCompareUI(QtGui.QMainWindow):
 		self.panel_container.setLayout(self.panel_layout)
 
 		self.compare_panels.setWidget(self.panel_container)
+
+	def compare_files(self):
+		self.current_left_text = self.left_compare_panel.view_file.toPlainText()
+		self.current_right_text = self.right_compare_panel.view_file.toPlainText()
+		for line in self.current_left_text.split('\n'):
+			print line
+		for line in self.current_right_text.split('\n'):
+			print line
+
 		
