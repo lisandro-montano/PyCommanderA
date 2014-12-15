@@ -61,11 +61,16 @@ class FileCompareUI(QtGui.QMainWindow):
 		self.compare_panels.setWidget(self.panel_container)
 
 	def compare_files(self):
+		self.current_left_array = []
+		self.current_right_array = []
 		self.current_left_text = self.left_compare_panel.view_file.toPlainText()
 		self.current_right_text = self.right_compare_panel.view_file.toPlainText()
 		for line in self.current_left_text.split('\n'):
-			print line
+			self.current_left_array.append(str(line))
 		for line in self.current_right_text.split('\n'):
-			print line
+			self.current_right_array.append(str(line))
+
+		print self.current_left_array
+		print self.current_right_array
 
 		
