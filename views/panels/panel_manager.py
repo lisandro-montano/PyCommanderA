@@ -5,6 +5,14 @@ from PyQt4 import QtGui
 from views.panels.panel_view import PanelView
 from views.panels.panel_operations import PanelOperations
 from items_management.item_operations import ItemOperations
+from views.file_compare.file_compare_ui import FileCompareUI
+
+COMPARE_ITEMS = "Compare"
+COPY_ITEMS = "Copy"
+MOVE_ITEMS = "Move"
+DELETE_ITEMS = "Delete"
+CREATE_FILES = "New File"
+RENAME_ITEMS = "Rename"
 
 class PanelManager(QtGui.QDockWidget):
 
@@ -45,6 +53,8 @@ class PanelManager(QtGui.QDockWidget):
 		self.item_operations = ItemOperations()
 		self.origin_full_paths = []
 		self.target_path = ""
+		self.left_files = []
+		self.right_files = []
 
 		if self.left_panel.panel.hasFocus():
 			self.current_panel = self.left_panel
@@ -55,8 +65,14 @@ class PanelManager(QtGui.QDockWidget):
 
 		self.origin_full_paths = self.get_current_panel_paths()
 
-		if action == "Copy" or action == "Move":
+		if action == COPY_ITEMS or action == MOVE_ITEMS:
 			self.target_path = self.get_target_panel_path(self.target_panel)
+
+		if action == COMPARE_ITEMS:
+			self.left_files = self.get_current_panel_paths(self.left_panel)
+			self.right_files = self.get_current_panel_paths(self.right_panel)
+		else:
+			self.origin_full_paths = self.get_current_panel_paths(current_panel)
 
 		self.execute_action(action)
 
@@ -104,22 +120,15 @@ class PanelManager(QtGui.QDockWidget):
 		Params:
 		- action: action from button pressed that will trigger proper panel_operation method e.g. "Copy"
 		"""
-		COPY_ITEMS = "Copy"
-		MOVE_ITEMS = "Move"
-		DELETE_ITEMS = "Delete"
-		CREATE_FILES = "New File"
-		RENAME_ITEMS = "Rename"
 
-		if action == COPY_ITEMS:
-			self.panel_operations.copy_items(self.origin_full_paths, self.target_path)
-		if action == MOVE_ITEMS:
-			self.panel_operations.move_items(self.origin_full_paths, self.target_path)
-		if action == DELETE_ITEMS:
-			self.confirm_items_deletion()
-		if action == CREATE_FILES:
-			self.new_file_dialog()
-		if action == RENAME_ITEMS:
-			self.rename_item_key_event()
+		run_action = {COMPARE_ITEMS : 'self.compare_files()',
+					  COPY_ITEMS : 'self.panel_operations.copy_items(self.origin_full_paths, self.target_path)',
+					  MOVE_ITEMS : 'self.panel_operations.move_items(self.origin_full_paths, self.target_path)',
+					  DELETE_ITEMS : 'self.confirm_items_deletion()',
+					  CREATE_FILES : 'self.new_file_dialog()',
+					  RENAME_ITEMS : 'self.rename_item_key_event()'}
+
+		eval(run_action[action])
 
 	def confirm_items_deletion(self):
 		"""Launch confirmation message to ensure the user really wants to delete selected files"""
@@ -158,3 +167,8 @@ class PanelManager(QtGui.QDockWidget):
 			#When there is no selected item, the item that has the cursor over will be renamed
 			self.current_panel.panel.selectionModel().clearSelection()
 			self.current_panel.panel.rename_dialog(self.current_panel.panel.currentIndex())
+
+	def compare_files(self):
+		"""Open Compare files window"""
+		self.compare_window = FileCompareUI(self.left_files, self.right_files)
+
