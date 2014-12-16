@@ -131,6 +131,7 @@ class ViewOperations(QtGui.QTableView):
                 self.change_item_selection_status(index, "Deselect")
         except:
             self.change_item_selection_status(index, "Select")
+        self.update_selected_items()
 
     def change_item_selection_status(self, index, change_status_item):
         """This method changes an item selection status
