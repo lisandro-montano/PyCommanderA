@@ -144,9 +144,13 @@ class ViewFile(QtGui.QMainWindow):
 			self.file_name.setText(self.current_file)
 			file.close()
 		except:
-			QtGui.QMessageBox.information(self, "Error Message", "There was a problem creating the file. Action was not completed.")
+			QtGui.QMessageBox.information(self, "Error Message", 
+										  "There was a problem creating the file. Action was not completed.")
 
 	def verify_compare_spaces(self):
+		"""In order to save changes, we need to remove indicators of comparison. 
+		This function removes +, - and 2 spaces at the beginning of each line
+		"""
 		self.remove_spaces = []
 		self.current_text = ""
 		self.current_text = self.view_file.toPlainText()
