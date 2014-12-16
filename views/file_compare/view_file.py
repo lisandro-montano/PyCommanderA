@@ -40,15 +40,21 @@ class ViewFile(QtGui.QMainWindow):
 		self.open_action.setStatusTip('Open a new file')
 		self.open_action.triggered.connect(self.open_file)
 
+		self.save_as_action = QtGui.QAction('Save As', self)
+		self.save_as_action.setStatusTip('Save file with a different name')
+		self.save_as_action.triggered.connect(self.save_as_dialog)
+
 		self.menubar = self.menuBar()
 		self.file_menu = self.menubar.addMenu('&File')
-		self.file_menu.addAction(self.save_action)
 		self.file_menu.addAction(self.open_action)
+		self.file_menu.addAction(self.save_action)
+		self.file_menu.addAction(self.save_as_action)
 
 	def save_file(self):
 		"""Save the current file and update selected_file and current_file variables"""
 
 		f = open(self.current_file, 'w')
+		self.verify_compare_spaces()
 		self.selected_file = self.view_file.toPlainText()
 		f.write(self.selected_file)
 		self.view_file.setText(self.selected_file)
@@ -105,3 +111,49 @@ class ViewFile(QtGui.QMainWindow):
 		"""
 		
 		self.view_file.setTextBackgroundColor(QtGui.QColor(0, 0, 0, 0))
+
+	def save_as_dialog(self):
+		"""Save file with a different name in the same location"""
+
+		new_full_name, ok_button_pressed = QtGui.QInputDialog.getText(self, 'Save as:', 'File name:',
+                                                  QtGui.QLineEdit.Normal, self.current_file)
+
+		#Verify if there is no file with the same introduced name in the current path
+		if ok_button_pressed and os.path.isfile(new_full_name) == False:
+			self.create_new_file(new_full_name)
+
+		#if there is a file name with the same name introduced, an error message is displayed
+		elif ok_button_pressed != False:
+			QtGui.QMessageBox.information(self, "Error Message",
+									      "There is a file with the same name. No new file was created.")
+
+	def create_new_file(self, new_full_name):
+		"""Create new file in the current path if it does not exist
+
+		Params:
+		- new_file_name: Receives the new file name
+		- current_path: Receives the current panel root path
+		"""
+		try:
+			file = open(new_full_name, 'w')
+			self.verify_compare_spaces()
+			self.selected_file = self.view_file.toPlainText()
+			file.write(self.selected_file)
+			self.view_file.setText(self.selected_file)
+			self.current_file = new_full_name
+			self.file_name.setText(self.current_file)
+			file.close()
+		except:
+			QtGui.QMessageBox.information(self, "Error Message", "There was a problem creating the file. Action was not completed.")
+
+	def verify_compare_spaces(self):
+		self.remove_spaces = []
+		self.current_text = ""
+		self.current_text = self.view_file.toPlainText()
+		for line in self.current_text.split('\n'):
+			if str(line).startswith("- ") or str(line).startswith("+ ") or str(line).startswith("  "):
+				line.replace(line[:2], '')
+			self.remove_spaces.append(str(line))
+		self.selected_file = '\n'.join(self.remove_spaces)
+		self.view_file.setText(self.selected_file)
+		self.remove_highlight()

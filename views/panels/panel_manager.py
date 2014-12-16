@@ -63,7 +63,7 @@ class PanelManager(QtGui.QDockWidget):
 			self.current_panel = self.right_panel
 			self.target_panel = self.left_panel
 
-		self.origin_full_paths = self.get_current_panel_paths()
+		self.origin_full_paths = self.get_current_panel_paths(self.current_panel)
 
 		if action == COPY_ITEMS or action == MOVE_ITEMS:
 			self.target_path = self.get_target_panel_path(self.target_panel)
@@ -72,11 +72,11 @@ class PanelManager(QtGui.QDockWidget):
 			self.left_files = self.get_current_panel_paths(self.left_panel)
 			self.right_files = self.get_current_panel_paths(self.right_panel)
 		else:
-			self.origin_full_paths = self.get_current_panel_paths()
+			self.origin_full_paths = self.get_current_panel_paths(self.current_panel)
 
 		self.execute_action(action)
 
-	def get_current_panel_paths(self):
+	def get_current_panel_paths(self, selected_panel):
 		"""Obtain an array that includes all selected paths in the origin panel
 		if no item is selected, the current index will be returned as only item in the array
 
@@ -85,7 +85,7 @@ class PanelManager(QtGui.QDockWidget):
 		- current_panel_paths: returns the selected item paths from the current_panel in order to perform actions
 		  on them
 		"""
-		current_panel_var = self.current_panel.panel
+		current_panel_var = selected_panel.panel
 		current_panel_paths = []
 		if len(self.current_panel.panel.selected_items) == 0:
 			item_path = str(current_panel_var.model().get_item_data(current_panel_var.currentIndex(), "Path"))
