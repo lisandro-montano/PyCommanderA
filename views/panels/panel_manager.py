@@ -72,7 +72,7 @@ class PanelManager(QtGui.QDockWidget):
 			self.left_files = self.get_current_panel_paths(self.left_panel)
 			self.right_files = self.get_current_panel_paths(self.right_panel)
 		else:
-			self.origin_full_paths = self.get_current_panel_paths(self.current_panel)
+			self.origin_full_paths = self.get_current_panel_paths()
 
 		self.execute_action(action)
 
