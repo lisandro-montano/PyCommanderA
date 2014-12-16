@@ -41,3 +41,17 @@ class PanelOperations(object):
                 os.remove(item_path)
             else:
                 shutil.rmtree(item_path)
+
+    def create_new_file(self, new_file_name, current_path):
+        """Create new file in the current path if it does not exist
+
+        Params:
+        - new_file_name: Receives the new file name
+        - current_path: Receives the current panel root path
+        """
+        try:
+            file = open(current_path + new_file_name, 'w')
+            file.close()
+
+        except:
+            print "Error"

@@ -32,6 +32,13 @@ class PanelView(QtGui.QWidget):
 
 		self.panel_toolbar.attach(self)
 
+
+		# Obtaining the selected item using mouse click event
+		self.panel.clicked.connect(self.panel.panel_list_selection)
+
+		# Obtaining the selected item using mouse double click event
+		self.panel.doubleClicked.connect(self.panel.update_panel_current_path)
+
 	def set_list_type(self, type):
 		"""Defines the view type
 		- List view
@@ -43,7 +50,7 @@ class PanelView(QtGui.QWidget):
 		elif type == self.ICONS_VIEW:
 			self.panel = IconsView(self.current_path)
 		elif type == self.DETAILED_VIEW:
-			self.panel = DetailsView(self.current_path)
+			self.panel = DetailedView(self.current_path)
 		return self.panel
 
 	def propagate_dir(self, new_dir):
