@@ -1,3 +1,5 @@
+import difflib
+
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from views.file_compare.view_file import ViewFile
@@ -10,11 +12,12 @@ class FileCompareUI(QtGui.QMainWindow):
 		self.init_ui()
 		self.get_items(left_files_list, right_files_list)
 		self.create_panels()
-		#self.compare_buttons()
+		self.create_buttons_bar()
 		self.setCentralWidget(self.compare_panels)
-		#self.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.compare_buttons)
+		self.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.buttons_container)
 		self.show()
-		self.compare_files()
+		self.connect(self.compare_button, QtCore.SIGNAL('clicked()'), 
+					 self.compare_files)
 
 	def init_ui(self):
 		"""Initializes the UI for File Comparison Window"""
@@ -60,6 +63,17 @@ class FileCompareUI(QtGui.QMainWindow):
 
 		self.compare_panels.setWidget(self.panel_container)
 
+	def create_buttons_bar(self):
+		self.buttons_container = QtGui.QDockWidget()
+		self.buttons_bar = QtGui.QWidget()
+		self.buttons_layout = QtGui.QHBoxLayout()
+		self.compare_button = QtGui.QPushButton("F3 - Compare")
+		self.compare_button.setShortcut(QtCore.Qt.Key_F3)
+		self.buttons_layout.addWidget(self.compare_button)
+		self.buttons_bar.setLayout(self.buttons_layout)
+		self.buttons_container.setWidget(self.buttons_bar)
+		self.buttons_container.setFeatures(QtGui.QDockWidget.NoDockWidgetFeatures)
+
 	def compare_files(self):
 		self.current_left_array = []
 		self.current_right_array = []
@@ -70,7 +84,20 @@ class FileCompareUI(QtGui.QMainWindow):
 		for line in self.current_right_text.split('\n'):
 			self.current_right_array.append(str(line))
 
-		print self.current_left_array
-		print self.current_right_array
+		d = difflib.Differ()
+		self.compare_result = list(d.compare(self.current_right_array, self.current_left_array))
+		self.remove_question_marks()
+		self.compare_result_string = '\n'.join(self.compare_result)
+		self.right_compare_panel.view_file.setText(self.compare_result_string)
+		for line in self.compare_result:
+			if line.startswith("- "):
+				self.right_compare_panel.highlight_section(line, "red")
+			if line.startswith("+ "):
+				self.right_compare_panel.highlight_section(line, "green")
 
-		
+	def remove_question_marks(self):
+		for line in self.compare_result:
+			if line.startswith("? "):
+				self.compare_result.remove(line)
+
+	

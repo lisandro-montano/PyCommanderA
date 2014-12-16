@@ -171,4 +171,4 @@ class PanelManager(QtGui.QDockWidget):
 	def compare_files(self):
 		"""Open Compare files window"""
 		self.compare_window = FileCompareUI(self.left_files, self.right_files)
-
+		self.compare_window.compare_files()

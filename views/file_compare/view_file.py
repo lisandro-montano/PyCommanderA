@@ -15,7 +15,6 @@ class ViewFile(QtGui.QMainWindow):
 		self.view_file = QtGui.QTextEdit(self)
 		self.view_file.setText(self.selected_file)
 		self.setCentralWidget(self.view_file)
-		self.highlight_word()
 		
 	def create_menubar(self):
 		save_action = QtGui.QAction('Save', self)
@@ -33,24 +32,24 @@ class ViewFile(QtGui.QMainWindow):
 		f.write(filedata)
 		f.close()
 
-	def highlight_word(self):
+	def highlight_section(self, section, color):
 		cursor = self.view_file.textCursor()
 		# Setup the desired format for matches
 		format = QtGui.QTextCharFormat()
-		format.setBackground(QtGui.QBrush(QtGui.QColor("red")))
-		# Setup the regex engine
-		pattern = "PyCommander"
-		regex = QtCore.QRegExp(pattern)
+		if color == "red":
+			format.setBackground(QtGui.QBrush(QtGui.QColor(255, 0, 0, 127)))
+			regex = QtCore.QRegExp(section)
+		else:
+			format.setBackground(QtGui.QBrush(QtGui.QColor(0, 255, 0, 127)))
+			regex = QtCore.QRegExp('\S' + section)
 		# Process the displayed document
 		pos = 0
 		index = regex.indexIn(self.view_file.toPlainText(), pos)
 		while (index != -1):
 			# Select the matched text and apply the desired format
 			cursor.setPosition(index)
-			cursor.movePosition(QtGui.QTextCursor.EndOfWord, 1)
+			cursor.movePosition(QtGui.QTextCursor.EndOfLine, 1)
 			cursor.mergeCharFormat(format)
 			# Move to the next match
 			pos = index + regex.matchedLength()
 			index = regex.indexIn(self.view_file.toPlainText(), pos)
-		
-        
