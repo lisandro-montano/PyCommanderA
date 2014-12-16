@@ -152,7 +152,7 @@ class PanelManager(QtGui.QDockWidget):
 		"""With the following ifs are capture the F4 key events execute the corresponding actions"""
 		if len(self.current_panel.panel.selectedIndexes()) == 1:
 			#When there is only one selected item, the selected item will be renamed
-			self.current_panel.panel.rename_dialog(self.selectedIndexes()[0])
+			self.current_panel.panel.rename_dialog(self.current_panel.panel.selectedIndexes()[0])
 
 		if len(self.current_panel.panel.selectedIndexes()) == 0 or len(self.current_panel.panel.selectedIndexes()) > 1:
 			#When there is no selected item, the item that has the cursor over will be renamed
