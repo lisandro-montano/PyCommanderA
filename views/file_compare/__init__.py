@@ -1,0 +1,1 @@
+from file_compare_ui import FileCompareUI

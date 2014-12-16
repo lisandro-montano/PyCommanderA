@@ -18,7 +18,7 @@ class ActionBar(QtGui.QDockWidget):
 		self.buttons_bar = QtGui.QWidget()
 		self.buttons_layout = QtGui.QHBoxLayout()
 
-		self.buttons_layout.addWidget(self.view_button)
+		self.buttons_layout.addWidget(self.compare_button)
 		self.buttons_layout.addWidget(self.rename_button)
 		self.buttons_layout.addWidget(self.copy_button)
 		self.buttons_layout.addWidget(self.move_button)
@@ -34,8 +34,8 @@ class ActionBar(QtGui.QDockWidget):
 		"""Create buttons required for actions bar
 		Apply no focus to ensure tab only works with panels
 		"""
-		self.view_button = QtGui.QPushButton("F3 - View")
-		self.view_button.setFocusPolicy(QtCore.Qt.NoFocus)
+		self.compare_button = QtGui.QPushButton("F3 - Compare")
+		self.compare_button.setFocusPolicy(QtCore.Qt.NoFocus)
 		self.rename_button = QtGui.QPushButton("F4 - Rename")
 		self.rename_button.setFocusPolicy(QtCore.Qt.NoFocus)
 		self.copy_button = QtGui.QPushButton("F5 - Copy")
@@ -51,7 +51,7 @@ class ActionBar(QtGui.QDockWidget):
 		self.set_shortcuts()
 
 	def set_shortcuts(self):
-		self.view_button.setShortcut(QtCore.Qt.Key_F3)
+		self.compare_button.setShortcut(QtCore.Qt.Key_F3)
 		self.rename_button.setShortcut(QtCore.Qt.Key_F4)
 		self.copy_button.setShortcut(QtCore.Qt.Key_F5)
 		self.move_button.setShortcut(QtCore.Qt.Key_F6)
@@ -61,7 +61,7 @@ class ActionBar(QtGui.QDockWidget):
 
 	def buttons_listener(self):
 		"""Trigger proper button actions and propagate it to observers"""
-		buttons_list = [(self.view_button, "View"),
+		buttons_list = [(self.compare_button, "Compare"),
 						(self.rename_button, "Rename"),
 						(self.copy_button, "Copy"),
 						(self.move_button, "Move"),
