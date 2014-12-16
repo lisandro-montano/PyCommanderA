@@ -49,5 +49,9 @@ class PanelOperations(object):
         - new_file_name: Receives the new file name
         - current_path: Receives the current panel root path
         """
-        file = open(current_path + new_file_name, 'w')
-        file.close()
+        try:
+            file = open(current_path + new_file_name, 'w')
+            file.close()
+
+        except:
+            print "Error"

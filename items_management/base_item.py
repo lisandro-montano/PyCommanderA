@@ -3,6 +3,9 @@ from PyQt4 import QtGui
 from item_operations import ItemOperations
 from PyQt4 import QtCore
 
+#Constants
+TABLE_VIEW_COLUMN_NUMBER = 0
+
 class BaseItem(QtGui.QFileSystemModel):
 	def __init__(self, current_path):
 		"""Create BaseItem to handle all item_operations
@@ -25,20 +28,15 @@ class BaseItem(QtGui.QFileSystemModel):
 		e.g. item_date(<list_view_object>, <folder_selected_index>, "Name")
 		     returns "<folder_name>"
 		"""
-		TABLE_VIEW_COLUMN_NUMBER = 0
 		index_item = self.index(index.row(), TABLE_VIEW_COLUMN_NUMBER, index.parent())
 
-		if data == "Name":
-			return self.fileName(index_item)
+		item_data_functions = { "Name": self.fileName(index_item),
+							    "Path": self.filePath(index_item),
+							    "Info": self.fileInfo(index_item),
+							    "Type": self.type(index_item)
+							  }
 
-		elif data == "Path":
-			return self.filePath(index_item)
-
-		elif data == "Info":
-			return self.fileInfo(index_item)
-
-		elif data == "Type":
-			return self.type(index_item)
+		return item_data_functions[data]
 
 	def get_item_type(self, index):
 		"""Returns the item type, returns "File" or "Folder"
@@ -56,16 +54,15 @@ class BaseItem(QtGui.QFileSystemModel):
 		elif self.item_operations.sub_string(str(file_type), "left", -4).find("File") >= 0:
 			return "File"
 
-	def rename_item(self, index, ok, new_name, current_item_name):
+	def rename_item(self, index, new_name, current_item_name):
 		"""Requests the item rename
 
 		Params:
-		- ok: QInputDialog action, if it's True, the rename is performed
-		- index: selected item index
-		- new_name: the new item name
-		- current_item_name: the current item name
+		- index: selected item index (QIndex)
+		- new_name: the new item name (String)
+		- current_item_name: the current item name (Item path)
 		"""
 		current_item_path = str(self.get_item_data(index, "Path"))
 
-		if ok and new_name != current_item_name:
+		if new_name != current_item_name:
 			self.item_operations.rename_item(current_item_path, current_item_name, new_name)

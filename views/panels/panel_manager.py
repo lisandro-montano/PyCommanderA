@@ -136,15 +136,15 @@ class PanelManager(QtGui.QDockWidget):
 
 	def new_file_dialog(self):
 		"""Create new file in the current path if it does not exist"""
-		new_file_name, ok = QtGui.QInputDialog.getText(self, 'Create New File', 'Introduce New File name:')
+		new_file_name, ok_button_pressed = QtGui.QInputDialog.getText(self, 'Create New File', 'Introduce New File name:')
 		current_path = self.current_panel.current_path
 
 		#Verify if there is no file with the same introduced name in the current path
-		if ok and os.path.isfile(current_path + new_file_name) == False:
+		if ok_button_pressed and os.path.isfile(current_path + new_file_name) == False:
 			self.panel_operations.create_new_file(new_file_name, current_path)
 
 		#if there is a file name with the same name introduced, an error message is displayed
-		elif ok != False:
+		elif ok_button_pressed != False:
 			QtGui.QMessageBox.information(self, "Error Message",
 									"There is a file with the same introduced name. No new file was created.")
 

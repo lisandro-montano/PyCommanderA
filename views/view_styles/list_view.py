@@ -15,7 +15,7 @@ class ListView(ViewOperations):
 
 	def hide_list_columns(self):
 	 	#Hiding the not required columns
-	 	self.setColumnWidth(self.NAME_COLUMN, self.NAME_COLUMN_WIDTH)
-		self.hideColumn(self.SIZE_COLUMN)
-		self.hideColumn(self.DATE_COLUMN)
-		self.hideColumn(self.KIND_COLUMN)
+	 	self.setColumnWidth(self.name_column, self.name_column_width)
+		self.hideColumn(self.size_column)
+		self.hideColumn(self.date_column)
+		self.hideColumn(self.kind_column)

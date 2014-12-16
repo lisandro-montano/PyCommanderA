@@ -4,6 +4,12 @@ from items_management.base_item import BaseItem
 from PyQt4.QtGui import QAbstractItemView, QTableView
 from PyQt4.QtCore import Qt
 
+#Constants
+MOUSE_RIGHT_CLICK_EVENT = 2
+MOUSE_LEFT_CLICK_EVENT = 1
+TABLE_VIEW_COLUMN_NUMBER = 0
+TABLE_VIEW_ROW_NUMBER = 0
+
 class ViewOperations(QtGui.QTableView):
     def __init__(self, current_path):
         """Sets the current path items view as list
@@ -17,22 +23,17 @@ class ViewOperations(QtGui.QTableView):
         self.setModel(self.panel_model)
         self.setRootIndex(self.panel_model.index(current_path))
         self.setSelectionMode(QAbstractItemView.MultiSelection)
-        TABLE_VIEW_COLUMN_NUMBER = 0
-        TABLE_VIEW_ROW_NUMBER = 0
         TABLE_VIEW_PARENT = self.selectionModel().currentIndex().parent()
         self.set_list_format()
         self.model().index(TABLE_VIEW_ROW_NUMBER, TABLE_VIEW_COLUMN_NUMBER, TABLE_VIEW_PARENT)
 
-        # Obtaining the selected item using mouse click event
-        self.clicked.connect(self.panel_list_selection)
-
     def set_list_format(self):
         """Set the list format and hide the not required columns"""
-        self.NAME_COLUMN = 0
-        self.NAME_COLUMN_WIDTH = 250
-        self.SIZE_COLUMN = 1
-        self.KIND_COLUMN = 2
-        self.DATE_COLUMN = 3
+        self.name_column = 0
+        self.name_column_width = 250
+        self.size_column = 1
+        self.kind_column = 2
+        self.date_column = 3
 
         self.verticalHeader().setVisible(False)
 
@@ -54,6 +55,16 @@ class ViewOperations(QtGui.QTableView):
         self.setRootIndex(self.panel_model.index(new_path))
         self.panel_model.setRootPath(new_path)
         self.setFocus()
+
+    @QtCore.pyqtSlot(QtCore.QModelIndex)
+    def update_panel_current_path(self, index):
+        """This method update the view's path, if the event was left
+
+        Params:
+        - index: receives the item index over which the actions will be performed
+        """
+        if self._mouse_button == MOUSE_LEFT_CLICK_EVENT:
+            self.update_path(self.panel_model.get_item_data(index, "Path"))
 
     def mousePressEvent(self, event):
         """Redefining the QTableView mousePressEvent
@@ -89,8 +100,6 @@ class ViewOperations(QtGui.QTableView):
         Params:
         - index: receives the item index over which the actions will be performed
         """
-        MOUSE_RIGHT_CLICK_EVENT = 2
-        MOUSE_LEFT_CLICK_EVENT = 1
 
         # If right click event is performed retrieve the item information
         if self._mouse_button == MOUSE_RIGHT_CLICK_EVENT:
@@ -147,8 +156,9 @@ class ViewOperations(QtGui.QTableView):
         """
         current_type = self.model().get_item_type(index)
         current_item_name = str(self.model().get_item_data(index, "Name"))
-        new_name, ok = QtGui.QInputDialog.getText(self, 'Rename %s Dialog' % current_type,
+        new_name, ok_button_pressed = QtGui.QInputDialog.getText(self, 'Rename %s Dialog' % current_type,
                                                   'Modify the %s name:' % current_type,
                                                   QtGui.QLineEdit.Normal, current_item_name)
 
-        self.model().rename_item(index, ok, new_name, current_item_name)
+        if ok_button_pressed == True:
+            self.model().rename_item(index, new_name, current_item_name)
