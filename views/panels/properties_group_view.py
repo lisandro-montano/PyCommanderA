@@ -10,11 +10,10 @@ class PropertiesGroupView(QtGui.QDialog):
         self.init_ui()
 
     def init_ui(self):
-        heigth = 380
+        height = 380
         width = 280
-        self.setFixedSize(heigth, width)
+        self.setFixedSize(height, width)
         self.setWindowTitle("General Properties")
-        # self.center()
         self.show()
         self.create_info_components()
         self.create_buttons_components()
