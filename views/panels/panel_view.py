@@ -31,7 +31,7 @@ class PanelView(QtGui.QWidget):
 		self.setLayout(self.panel_layout)
 
 		self.panel_toolbar.attach(self)
-
+		self.panel.attach(self)
 
 		# Obtaining the selected item using mouse click event
 		self.panel.clicked.connect(self.panel.panel_list_selection)

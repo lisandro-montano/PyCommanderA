@@ -1,6 +1,8 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 
+from views.view_styles.view_operations import ViewOperations
+
 class PanelToolbar(QtGui.QWidget):
 	def __init__(self, current_path):
 		"""Create panel toolbar including:
@@ -19,8 +21,7 @@ class PanelToolbar(QtGui.QWidget):
 		self.configure_toolbar()
 
 		#Signal that detects changes in combo box
-		self.connect(self.dir_combo, QtCore.SIGNAL('currentIndexChanged(const QString &)'),
-					 self.propagate_dir)
+		self.connect(self.dir_combo, QtCore.SIGNAL('currentIndexChanged(const QString &)'), self.propagate_dir)
 
 		#Signal that detects changes in path field
 		self.connect(self.path_edit, QtCore.SIGNAL('returnPressed()'), 
@@ -60,15 +61,15 @@ class PanelToolbar(QtGui.QWidget):
 		- new_dir: modified path obtained from combo box, path_edit or panel in order
 		to modify current panel list of items e.g "/Users" "C:\Users"
 		"""
-		if new_dir == "":
-			new_dir = self.path_edit.text()
-		#Detect if path_edit is properly finished in order to avoid problems while moving
-		#or copying items 
-		if new_dir[-1] != "/" and new_dir[-1] != "'\'":
-			new_dir = new_dir + "/"
-		
-		for panel_observer in self._observers:
-			panel_observer.propagate_dir(new_dir)
+		if self.dir_combo.currentText() != self.path_edit.text():
+			if new_dir == "":
+				new_dir = self.path_edit.text()
+			#Detect if path_edit is properly finished in order to avoid problems while moving
+			#or copying items 
+			if new_dir[-1] != "/" and new_dir[-1] != "'\'":
+				new_dir = new_dir + "/"
+			for panel_observer in self._observers:
+				panel_observer.propagate_dir(new_dir)
 
 	def update_path(self, new_path):
 		"""Update path in the toolbar when changed
