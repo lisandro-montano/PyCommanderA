@@ -59,14 +59,15 @@ class ViewOperations(QtGui.QTableView):
 
     @QtCore.pyqtSlot(QtCore.QModelIndex)
     def update_panel_current_path(self, index):
-        """This method update the view's path, if the event was left
+        """This method update the view's path, if the event was left, only if the item is a Folder
 
         Params:
-        - index: receives the item index over which the actions will be performed
+        - index: receives the item index over which the actions will be performed (QIndex)
         """
-        new_path = self.panel_model.get_item_data(index, "Path")
-        for panel_observer in self._observers:
-            panel_observer.propagate_dir(new_path)
+        if self.panel_model.get_item_type(index) == "Folder":
+            new_path = self.panel_model.get_item_data(index, "Path")
+            for panel_observer in self._observers:
+                panel_observer.propagate_dir(new_path)
 
     def mousePressEvent(self, event):
         """Redefining the QTableView mousePressEvent
