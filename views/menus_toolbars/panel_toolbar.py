@@ -21,7 +21,7 @@ class PanelToolbar(QtGui.QWidget):
 		self.configure_toolbar()
 
 		#Signal that detects changes in combo box
-		self.connect(self.dir_combo, QtCore.SIGNAL('currentIndexChanged(const QString &)'), self.propagate_dir)
+		self.connect(self.dir_combo, QtCore.SIGNAL('currentIndexChanged(const QString &)'), self.verify_dir)
 
 		#Signal that detects changes in path field
 		self.connect(self.path_edit, QtCore.SIGNAL('returnPressed()'), 
@@ -80,9 +80,14 @@ class PanelToolbar(QtGui.QWidget):
 		to modify current panel list of items e.g "/Users" "C:\Users"
 		"""
 		self.path_edit.setText(new_path)
-		new_path_dir = new_path[0] + ":/"
+		new_path_dir = str(new_path[0]).upper() + ":/"
 		if new_path_dir != self.dir_combo.currentText():
 			combo_current_index = self.dir_combo.findText(new_path_dir)
 			self.dir_combo.setCurrentIndex(combo_current_index)
-			
-
+	
+	def verify_dir(self, new_dir):
+		"""Verify if it is necessary to trigger this function, do not trigger if new_dir from 
+		combo box and dir from path edit are the same
+		"""
+		if new_dir[:2] != self.path_edit.text()[:2]:
+			self.propagate_dir(new_dir)
