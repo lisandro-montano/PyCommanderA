@@ -1,17 +1,17 @@
 import sys
 
 from PyQt4 import QtGui
-from PyQt4.QtCore import SIGNAL
-from PyQt4.QtGui import QVBoxLayout, QWidget, QPushButton, QTableView, QDockWidget, QLineEdit, QStandardItemModel
+from PyQt4.QtCore import Qt
+from PyQt4.QtGui import QVBoxLayout, QWidget, QPushButton, QTableView,\
+    QLineEdit, QStandardItemModel, QHBoxLayout, QStandardItem
 
-
-class FilesRenameUI(QDockWidget):
-    def __init__(self, indexes_list):
+class FilesRenameUI(QWidget):
+    def __init__(self):
         super(FilesRenameUI, self).__init__()
 
+        indexes_list = [1, 2, 3, 4, 5]
         self.setGeometry(200, 100, 400, 300)
-        self.setWindowTitle('Rename multiple files')
-        self.panel_splitter = QtGui.QSplitter()
+        self.setWindowTitle('PyMultipleRenameA')
 
         self.names = QLineEdit()
         self.names.setObjectName("Name")
@@ -24,14 +24,13 @@ class FilesRenameUI(QDockWidget):
         self.current_names_label = QtGui.QLabel("Current items name")
         self.new_names_label = QtGui.QLabel("New items name")
 
-        self.model1 = QStandardItemModel(self)
-        self.current_names = QTableView()
-        self.current_names.setModel(self.model1)
 
-        self.model2 = QStandardItemModel(self)
-        self.new_names = QTableView()
-        self.new_names.setModel(self.model2)
-        self.new_names.append_selected_files(indexes_list)
+        header_labels = ['Name']
+        self.model = QStandardItemModel(self)
+        self.model.setHeaderData(0, Qt.Horizontal, header_labels[0])
+        self.append_selected_files(indexes_list)
+        self.current_names = QTableView()
+        self.current_names.setModel(self.model)
 
         self.cancel_button = QPushButton()
         self.cancel_button.setObjectName("cancel")
@@ -41,33 +40,25 @@ class FilesRenameUI(QDockWidget):
         self.rename_button.setObjectName("rename")
         self.rename_button.setText("Rename")
 
-        self.panel_1 = QWidget()
-        self.panel_h_layout1 = QVBoxLayout()
-        self.panel_h_layout1.addWidget(self.names)
-        self.panel_h_layout1.addWidget(self.current_names_label)
-        self.panel_h_layout1.addWidget(self.current_names)
-        self.panel_h_layout1.addWidget(self.cancel_button)
+        self.fields = QHBoxLayout()
+        self.fields.addWidget(self.names)
+        self.fields.addWidget(self.extension)
 
-        self.panel_2 = QWidget()
-        self.panel_h_layout2 = QVBoxLayout()
-        self.panel_h_layout2.addWidget(self.extension)
-        self.panel_h_layout2.addWidget(self.new_names_label)
-        self.panel_h_layout2.addWidget(self.new_names)
-        self.panel_h_layout2.addWidget(self.rename_button)
+        self.buttons = QHBoxLayout()
+        self.buttons.addWidget(self.cancel_button)
+        self.buttons.addWidget(self.rename_button)
 
-        self.panel_1.setLayout(self.panel_h_layout1)
-        self.panel_2.setLayout(self.panel_h_layout2)
+        self.panel_v_layout = QVBoxLayout()
+        self.panel_v_layout.addLayout(self.fields)
+        self.panel_v_layout.addWidget(self.current_names)
+        self.panel_v_layout.addLayout(self.buttons)
 
-        self.panel_splitter.addWidget(self.panel_1)
-        self.panel_splitter.addWidget(self.panel_2)
-
-        self.setWidget(self.panel_splitter)
-
-        self.setFeatures(QtGui.QDockWidget.NoDockWidgetFeatures)
+        self.setLayout(self.panel_v_layout)
 
     def append_selected_files(self, indexes_list):
         for index in indexes_list:
-            self.new_names.model().appendRow(index)
+            item = QStandardItem(index)
+            self.model.appendRow(item)
 
 app = QtGui.QApplication(sys.argv)
 form = FilesRenameUI()
