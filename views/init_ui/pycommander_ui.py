@@ -1,5 +1,6 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from preferences_checkboxes import PreferencesCheckboxes
 from views.panels.panel_manager import PanelManager
 from views.menus_toolbars.action_bar import ActionBar
 
@@ -28,7 +29,29 @@ class PyCommanderUIGenerator(QtGui.QMainWindow):
 		   - Panels
 		   - Action buttons
 		"""
+
+		#Defining the menu options
+		closeAction = QtGui.QAction('Close', self)
+		closeAction.setShortcut('Ctrl+Q')
+		closeAction.setStatusTip('Close Bar')
+		closeAction.triggered.connect(self.close)
+
+		menubar = self.menuBar()
+		fileMenu = menubar.addMenu('&File')
+		fileMenu.addAction(closeAction)
+
+		check_box = QtGui.QAction('Preferences', self)
+		check_box.setShortcut('Ctrl+S')
+		check_box.setStatusTip('Open preferences')
+		check_box.triggered.connect(self.show_checkbox)
+
+		settingsMenu = menubar.addMenu('&Settings')
+		settingsMenu.addAction(check_box)
+
+		#Defining the panel manager
 		self.panels = PanelManager()
+
+		#Defining the action bar
 		self.action_bar = ActionBar()
 		self.action_bar.attach(self)
 
@@ -44,3 +67,6 @@ class PyCommanderUIGenerator(QtGui.QMainWindow):
 		- pressed_button: Defines the action that will be triggered e.g. "Move", "Copy" or "Delete"
 		"""
 		self.panels.get_focused_panel(pressed_button)
+
+	def show_checkbox(self):
+		checkbox_dialog = PreferencesCheckboxes(parent=self)
