@@ -60,6 +60,11 @@ class PreferencesCheckboxes(QtGui.QMainWindow):
         self.setWindowTitle('Select Options')
         self.show()
 
+        self._observers = []
+        #Signal that detects changes in path field
+        self.connect(button_ok, QtCore.SIGNAL('clicked()'), 
+                     self.update_panels_view)
+
     def save_preferences(self):
         """Save the user view preferences in a settings.ini file"""
         settings = QSettings('settings.ini', QtCore.QSettings.IniFormat, self)
@@ -118,3 +123,12 @@ class PreferencesCheckboxes(QtGui.QMainWindow):
 		self.item_size.setChecked(settings.value("item_size","r").toBool())
 		self.item_date.setChecked(settings.value("item_date","r").toBool())
 		settings.endGroup()
+
+    def attach(self, observer):
+        """Attach observers to detect directory/path changes"""
+        if not observer in self._observers:
+            self._observers.append(observer)
+
+    def update_panels_view(self):
+        for panel_observer in self._observers:
+            panel_observer.set_user_preferences()
