@@ -5,6 +5,11 @@ from PyQt4.QtCore import QSettings
 class PreferencesCheckboxes(QtGui.QMainWindow):
     
     def __init__(self, parent=None):
+        """In this interface the user can set the view preferences as listView or detailedView
+
+		Params:
+		- parent: receives the parent reference
+		"""
         super(PreferencesCheckboxes, self).__init__(parent)
 
         self.options_section = QtGui.QDockWidget()
@@ -45,8 +50,8 @@ class PreferencesCheckboxes(QtGui.QMainWindow):
         self.setCentralWidget(self.options_section)
 
         #Checkbox events
-        self.list_view.checked.connect(self.list_view_checked())
-        self.detailed_view.checked.connect(self.detailed_view_checked())
+        self.list_view.stateChanged.connect(self.list_view_checked)
+        self.detailed_view.stateChanged.connect(self.detailed_view_checked)
 
         self.setFixedSize(300, 250)
         self.setGeometry(300, 300, 250, 150)
@@ -54,6 +59,7 @@ class PreferencesCheckboxes(QtGui.QMainWindow):
         self.show()
 
     def save_preferences(self):
+        """Save the user view preferences in a settings.ini file"""
         settings = QSettings('settings.ini', QtCore.QSettings.IniFormat, self)
         settings.setValue("detailed_view", self.detailed_view.isChecked())
         settings.setValue("list_view", self.list_view.isChecked())
@@ -62,14 +68,40 @@ class PreferencesCheckboxes(QtGui.QMainWindow):
         settings.setValue("item_date", self.checkbox3.isChecked())
         self.close()
 
-    def list_view_checked(self):
-        self.detailed_view.setEnabled(False)
-        self.checkbox1.setEnabled(False)
-        self.checkbox2.setEnabled(False)
-        self.checkbox3.setEnabled(False)
+    def list_view_checked(self, state):
+        """Based on the received state, this method sets the list and detailed view check box check or unchecked
+        and enable/disable the checkboxes related to the wanted columns enabled for detailed view.
 
-    def detailed_view_checked(self):
-        self.list_view.setEnabled(False)
-        self.checkbox1.setEnabled(True)
-        self.checkbox2.setEnabled(True)
-        self.checkbox3.setEnabled(True)
+        Params:
+        - state: receives the list view QEvent e.g. "QtCore.Qt.Checked"
+        """
+        if state == QtCore.Qt.Checked:
+            self.detailed_view.setChecked(False)
+            self.checkbox1.setEnabled(False)
+            self.checkbox2.setEnabled(False)
+            self.checkbox3.setEnabled(False)
+        elif state == QtCore.Qt.Unchecked:
+            self.list_view.setChecked(False)
+            self.detailed_view.setChecked(True)
+            self.checkbox1.setEnabled(True)
+            self.checkbox2.setEnabled(True)
+            self.checkbox3.setEnabled(True)
+
+    def detailed_view_checked(self, state):
+        """Based on the received state, this method sets the list and detailed view check box check or unchecked
+        and enable/disable the checkboxes related to the wanted columns enabled for detailed view.
+
+        Params:
+        - state: receives the detailed view QEvent e.g. "QtCore.Qt.Checked"
+        """
+        if state == QtCore.Qt.Checked:
+            self.list_view.setChecked(False)
+            self.checkbox1.setEnabled(True)
+            self.checkbox2.setEnabled(True)
+            self.checkbox3.setEnabled(True)
+        elif state == QtCore.Qt.Unchecked:
+            self.list_view.setChecked(True)
+            self.detailed_view.setChecked(False)
+            self.checkbox1.setEnabled(False)
+            self.checkbox2.setEnabled(False)
+            self.checkbox3.setEnabled(False)
