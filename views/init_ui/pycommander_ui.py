@@ -73,5 +73,5 @@ class PyCommanderUIGenerator(QtGui.QMainWindow):
 		checkbox_dialog.attach(self)
 
 	def set_user_preferences(self):
-		self.panels.left_panel.obtain_user_preferences()
-		self.panels.right_panel.obtain_user_preferences()
+		self.panels.left_panel.set_user_preferences()
+		self.panels.right_panel.set_user_preferences()

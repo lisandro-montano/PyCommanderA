@@ -26,10 +26,6 @@ class PreferencesCheckboxes(QtGui.QMainWindow):
         button_ok = QtGui.QPushButton('OK', self)
         button_cancel = QtGui.QPushButton('Cancel', self)
 
-        #Button Events
-        button_cancel.clicked.connect(self.close)
-        button_ok.clicked.connect(self.save_preferences)
-
         self.buttons_container =QtGui.QWidget()
         self.buttons_layout = QtGui.QHBoxLayout()
         self.buttons_layout.addWidget(button_ok)
@@ -60,9 +56,12 @@ class PreferencesCheckboxes(QtGui.QMainWindow):
         self.setWindowTitle('Select Options')
         self.show()
 
+        #Button Events
+        button_cancel.clicked.connect(self.close)
+
         self._observers = []
-        #Signal that detects changes in path field
-        self.connect(button_ok, QtCore.SIGNAL('clicked()'), 
+        #Signal that detects changes in user's preferences
+        self.connect(button_ok, QtCore.SIGNAL('clicked()'),
                      self.update_panels_view)
 
     def save_preferences(self):
@@ -71,9 +70,14 @@ class PreferencesCheckboxes(QtGui.QMainWindow):
         settings.beginGroup("user_preferences")
         settings.setValue("list_view", self.list_view.isChecked())
         settings.setValue("detailed_view", self.detailed_view.isChecked())
-        settings.setValue("item_extension", self.item_extension.isChecked())
-        settings.setValue("item_size", self.item_size.isChecked())
-        settings.setValue("item_date", self.item_date.isChecked())
+        if self.detailed_view.isChecked():
+            settings.setValue("item_extension", self.item_extension.isChecked())
+            settings.setValue("item_size", self.item_size.isChecked())
+            settings.setValue("item_date", self.item_date.isChecked())
+        else:
+            settings.setValue("item_extension", False)
+            settings.setValue("item_size", False)
+            settings.setValue("item_date", False)
         self.close()
 
     def list_view_checked(self, state):
@@ -130,5 +134,6 @@ class PreferencesCheckboxes(QtGui.QMainWindow):
             self._observers.append(observer)
 
     def update_panels_view(self):
+        self.save_preferences()
         for panel_observer in self._observers:
             panel_observer.set_user_preferences()

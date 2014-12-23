@@ -24,12 +24,7 @@ class PanelView(QtGui.QWidget):
 		self.DETAILED_VIEW = 3
 		self.user_view_preferences_list = []
 
-		self.obtain_user_preferences()
-
-		if self.user_view_preferences_list[0][1] == True:
-			self.set_list_type(self.LIST_VIEW)
-		elif self.user_view_preferences_list[1][1] == True:
-			self.set_list_type(self.DETAILED_VIEW)
+		self.set_user_preferences()
 		
 		self.panel_toolbar = PanelToolbar(self.current_path)
 		self.panel_layout = QtGui.QVBoxLayout()
@@ -58,7 +53,6 @@ class PanelView(QtGui.QWidget):
 			self.panel = IconsView(self.current_path)
 		elif type == self.DETAILED_VIEW:
 			self.panel = DetailedView(self.current_path, self.user_view_preferences_list)
-		return self.panel
 
 	def propagate_dir(self, new_dir):
 		"""Detect changes in directory/path and propagate them to proper instances
@@ -74,7 +68,7 @@ class PanelView(QtGui.QWidget):
 		self.panel_toolbar.update_path(self.current_path)
 		self.panel.update_path(self.current_path)
 
-	def obtain_user_preferences(self):
+	def set_user_preferences(self):
 		settings = QSettings("settings.ini", QtCore.QSettings.IniFormat, self)
 		settings.beginGroup("user_preferences")
 		self.user_view_preferences_list.append(["list_view", settings.value("list_view","r").toBool()])
@@ -83,3 +77,11 @@ class PanelView(QtGui.QWidget):
 		self.user_view_preferences_list.append(["item_size", settings.value("item_size","r").toBool()])
 		self.user_view_preferences_list.append(["item_date", settings.value("item_date","r").toBool()])
 		settings.endGroup()
+
+		if self.user_view_preferences_list[0][1] == True:
+			self.set_list_type(self.LIST_VIEW)
+		elif self.user_view_preferences_list[1][1] == True:
+			self.set_list_type(self.DETAILED_VIEW)
+
+
+		self.user_view_preferences_list = []
