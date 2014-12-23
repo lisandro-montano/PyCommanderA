@@ -2,6 +2,7 @@ import sys
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4.QtCore import QSettings, QStringList
 
 from views.view_styles.list_view import ListView
 from views.view_styles.icons_view import IconsView
@@ -21,8 +22,14 @@ class PanelView(QtGui.QWidget):
 		self.LIST_VIEW = 1
 		self.ICONS_VIEW = 2
 		self.DETAILED_VIEW = 3
+		self.user_view_preferences_list = []
 
-		self.set_list_type(self.LIST_VIEW)
+		self.obtain_user_preferences()
+
+		if self.user_view_preferences_list[0][1] == True:
+			self.set_list_type(self.LIST_VIEW)
+		elif self.user_view_preferences_list[1][1] == True:
+			self.set_list_type(self.DETAILED_VIEW)
 		
 		self.panel_toolbar = PanelToolbar(self.current_path)
 		self.panel_layout = QtGui.QVBoxLayout()
@@ -50,7 +57,7 @@ class PanelView(QtGui.QWidget):
 		elif type == self.ICONS_VIEW:
 			self.panel = IconsView(self.current_path)
 		elif type == self.DETAILED_VIEW:
-			self.panel = DetailedView(self.current_path)
+			self.panel = DetailedView(self.current_path, self.user_view_preferences_list)
 		return self.panel
 
 	def propagate_dir(self, new_dir):
@@ -66,3 +73,13 @@ class PanelView(QtGui.QWidget):
 		self.current_path = new_dir
 		self.panel_toolbar.update_path(self.current_path)
 		self.panel.update_path(self.current_path)
+
+	def obtain_user_preferences(self):
+		settings = QSettings("settings.ini", QtCore.QSettings.IniFormat, self)
+		settings.beginGroup("user_preferences")
+		self.user_view_preferences_list.append(["list_view", settings.value("list_view","r").toBool()])
+		self.user_view_preferences_list.append(["detailed_view", settings.value("detailed_view","r").toBool()])
+		self.user_view_preferences_list.append(["item_extension", settings.value("item_extension","r").toBool()])
+		self.user_view_preferences_list.append(["item_size", settings.value("item_size","r").toBool()])
+		self.user_view_preferences_list.append(["item_date", settings.value("item_date","r").toBool()])
+		settings.endGroup()
