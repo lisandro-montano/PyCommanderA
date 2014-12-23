@@ -1,5 +1,6 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4.QtCore import QObjectCleanupHandler
 from preferences_checkboxes import PreferencesCheckboxes
 from views.panels.panel_manager import PanelManager
 from views.menus_toolbars.action_bar import ActionBar
@@ -74,4 +75,5 @@ class PyCommanderUIGenerator(QtGui.QMainWindow):
 
 	def set_user_preferences(self):
 		self.panels.left_panel.set_user_preferences()
+		QObjectCleanupHandler().add(self.panels.right_panel.layout())
 		self.panels.right_panel.set_user_preferences()

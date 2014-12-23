@@ -2,7 +2,7 @@ import sys
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-from PyQt4.QtCore import QSettings, QStringList
+from PyQt4.QtCore import QSettings, QObjectCleanupHandler
 
 from views.view_styles.list_view import ListView
 from views.view_styles.icons_view import IconsView
@@ -24,22 +24,8 @@ class PanelView(QtGui.QWidget):
 		self.DETAILED_VIEW = 3
 		self.user_view_preferences_list = []
 
-		self.set_user_preferences()
-		
 		self.panel_toolbar = PanelToolbar(self.current_path)
-		self.panel_layout = QtGui.QVBoxLayout()
-		self.panel_layout.addWidget(self.panel_toolbar)
-		self.panel_layout.addWidget(self.panel)
-		self.setLayout(self.panel_layout)
-
-		self.panel_toolbar.attach(self)
-		self.panel.attach(self)
-
-		# Obtaining the selected item using mouse click event
-		self.panel.clicked.connect(self.panel.panel_list_selection)
-
-		# Obtaining the selected item using mouse double click event
-		self.panel.doubleClicked.connect(self.panel.update_panel_current_path)
+		self.set_user_preferences()
 
 	def set_list_type(self, type):
 		"""Defines the view type
@@ -78,10 +64,33 @@ class PanelView(QtGui.QWidget):
 		self.user_view_preferences_list.append(["item_date", settings.value("item_date","r").toBool()])
 		settings.endGroup()
 
+		try:
+			QObjectCleanupHandler().add(self.panel_layout.layout())
+		except:
+			print "First time the layout is not added yet"
+
+		self.panel_layout = QtGui.QVBoxLayout()
+		self.panel_layout.addWidget(self.panel_toolbar)
+
+		try:
+			QObjectCleanupHandler().add(self.panel)
+		except:
+			print "First time the panel is not defined yet"
+
 		if self.user_view_preferences_list[0][1] == True:
 			self.set_list_type(self.LIST_VIEW)
 		elif self.user_view_preferences_list[1][1] == True:
 			self.set_list_type(self.DETAILED_VIEW)
 
-
+		self.panel_layout.addWidget(self.panel)
+		self.setLayout(self.panel_layout)
 		self.user_view_preferences_list = []
+
+		self.panel_toolbar.attach(self)
+		self.panel.attach(self)
+
+		# Obtaining the selected item using mouse click event
+		self.panel.clicked.connect(self.panel.panel_list_selection)
+
+		# Obtaining the selected item using mouse double click event
+		self.panel.doubleClicked.connect(self.panel.update_panel_current_path)

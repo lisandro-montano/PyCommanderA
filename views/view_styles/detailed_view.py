@@ -14,6 +14,7 @@ class DetailedView(ViewOperations):
 		self.show_hide_list_columns(user_preferences_list)
 
 	def show_hide_list_columns(self, user_preferences_list):
+		self.setColumnWidth(self.name_column, self.name_column_width)
 	 	#Hiding or showing the columns based on user's preferences
 	 	if user_preferences_list[2][1] == False:
 			self.hideColumn(self.kind_column)
