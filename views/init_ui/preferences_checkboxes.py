@@ -1,7 +1,6 @@
 from PyQt4 import QtGui, QtCore
-from PyQt4.QtCore import QSettings
+from PyQt4.QtCore import QSettings, Qt
 
-#class CheckBox(QtGui.QWidget):
 class PreferencesCheckboxes(QtGui.QMainWindow):
     
     def __init__(self, parent=None):
@@ -14,55 +13,65 @@ class PreferencesCheckboxes(QtGui.QMainWindow):
 
         self.options_section = QtGui.QDockWidget()
         self.options_container =QtGui.QWidget()
+        self.view_options = QtGui.QVBoxLayout()
         self.options_layout = QtGui.QVBoxLayout()
 
-        self.detailed_view = QtGui.QCheckBox('Detailed View', self)
-        self.list_view = QtGui.QCheckBox('List View', self)
-        
-        self.item_extension = QtGui.QCheckBox('Extension', self)
-        self.item_size = QtGui.QCheckBox('Size', self)
-        self.item_date = QtGui.QCheckBox('Date', self)
-
-        button_ok = QtGui.QPushButton('OK', self)
-        button_cancel = QtGui.QPushButton('Cancel', self)
-
-        self.buttons_container =QtGui.QWidget()
-        self.buttons_layout = QtGui.QHBoxLayout()
-        self.buttons_layout.addWidget(button_ok)
-        self.buttons_layout.addWidget(button_cancel)
-        self.buttons_container.setLayout(self.buttons_layout)
-
-        self.options_layout.addWidget(self.list_view)
-        self.options_layout.addWidget(self.detailed_view)
-        self.options_layout.addWidget(self.item_extension)
-        self.options_layout.addWidget(self.item_size)
-        self.options_layout.addWidget(self.item_date)
-        self.options_layout.addWidget(self.buttons_container)
-
-        self.options_container.setLayout(self.options_layout)
+        #Set radio buttons and checkboxes for user view preferences
+        self.add_user_preferences_options()
 
         self.options_section.setWidget(self.options_container)
         self.options_section.setFeatures(QtGui.QDockWidget.NoDockWidgetFeatures)
         self.setCentralWidget(self.options_section)
 
+        #Import from user settings the view preferences set previously in a previous PyCommanderA opened
         self.set_user_preferences()
 
         #Checkbox events
-        self.list_view.stateChanged.connect(self.list_view_checked)
-        self.detailed_view.stateChanged.connect(self.detailed_view_checked)
+        self.list_view.toggled.connect(self.list_view_selected)
+        self.detailed_view.toggled.connect(self.detailed_view_checked)
 
-        self.setFixedSize(300, 250)
-        self.setGeometry(300, 300, 250, 150)
-        self.setWindowTitle('Select Options')
+        self.setFixedSize(200, 200)
+        self.setGeometry(300, 300, 200, 200)
+        self.setWindowTitle('User View')
         self.show()
 
         #Button Events
-        button_cancel.clicked.connect(self.close)
+        self.button_cancel.clicked.connect(self.close)
 
         self._observers = []
         #Signal that detects changes in user's preferences
-        self.connect(button_ok, QtCore.SIGNAL('clicked()'),
-                     self.update_panels_view)
+        self.connect(self.button_ok, QtCore.SIGNAL('clicked()'), self.update_panels_view)
+
+    def add_user_preferences_options(self):
+        """Add to the User Preferences window options"""
+        self.detailed_view = QtGui.QRadioButton('Detailed View', self)
+        self.list_view = QtGui.QRadioButton('List View', self)
+
+        self.item_extension = QtGui.QCheckBox('Extension', self)
+        self.item_size = QtGui.QCheckBox('Size', self)
+        self.item_date = QtGui.QCheckBox('Date', self)
+
+        self.button_ok = QtGui.QPushButton('OK', self)
+        self.button_cancel = QtGui.QPushButton('Cancel', self)
+
+        self.buttons_container =QtGui.QWidget()
+        self.buttons_layout = QtGui.QHBoxLayout()
+        self.buttons_layout.addWidget(self.button_ok)
+        self.buttons_layout.addWidget(self.button_cancel)
+        self.buttons_container.setLayout(self.buttons_layout)
+
+        self.view_options.addWidget(self.list_view)
+        self.view_options.addWidget(self.detailed_view)
+
+        self.options_layout.setAlignment(Qt.AlignCenter)
+        self.options_layout.addWidget(self.item_extension)
+        self.options_layout.addWidget(self.item_size)
+        self.options_layout.addWidget(self.item_date)
+
+        self.view_options.addLayout(self.options_layout)
+        self.view_options.addWidget(self.buttons_container)
+
+        self.options_container.setLayout(self.view_options)
 
     def save_preferences(self):
         """Save the user view preferences in a settings.ini file"""
@@ -80,7 +89,7 @@ class PreferencesCheckboxes(QtGui.QMainWindow):
             settings.setValue("item_date", False)
         self.close()
 
-    def list_view_checked(self, state):
+    def list_view_selected(self, state):
         """Based on the received state, this method sets the list and detailed view check box check or unchecked
         and enable/disable the checkboxes related to the wanted columns enabled for detailed view.
 
@@ -119,14 +128,19 @@ class PreferencesCheckboxes(QtGui.QMainWindow):
             self.item_date.setEnabled(False)
 
     def set_user_preferences(self):
-		settings = QSettings("settings.ini", QtCore.QSettings.IniFormat, self)
-		settings.beginGroup("user_preferences")
-		self.detailed_view.setChecked(settings.value("detailed_view","r").toBool())
-		self.list_view.setChecked(settings.value("list_view","r").toBool())
-		self.item_extension.setChecked(settings.value("item_extension","r").toBool())
-		self.item_size.setChecked(settings.value("item_size","r").toBool())
-		self.item_date.setChecked(settings.value("item_date","r").toBool())
-		settings.endGroup()
+        """Opens the settings.ini and import the user preferences and sets in the window options"""
+        settings = QSettings("settings.ini", QtCore.QSettings.IniFormat, self)
+        settings.beginGroup("user_preferences")
+        self.detailed_view.setChecked(settings.value("detailed_view","r").toBool())
+        self.list_view.setChecked(settings.value("list_view","r").toBool())
+        self.item_extension.setChecked(settings.value("item_extension","r").toBool())
+        self.item_size.setChecked(settings.value("item_size","r").toBool())
+        self.item_date.setChecked(settings.value("item_date","r").toBool())
+        settings.endGroup()
+        if self.list_view.isChecked():
+            self.item_extension.setEnabled(False)
+            self.item_size.setEnabled(False)
+            self.item_date.setEnabled(False)
 
     def attach(self, observer):
         """Attach observers to detect directory/path changes"""
@@ -134,6 +148,7 @@ class PreferencesCheckboxes(QtGui.QMainWindow):
             self._observers.append(observer)
 
     def update_panels_view(self):
+        """Send the signal to update the panels based on the view selected by the user"""
         self.save_preferences()
         for panel_observer in self._observers:
             panel_observer.set_user_preferences()

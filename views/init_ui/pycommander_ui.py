@@ -31,23 +31,8 @@ class PyCommanderUIGenerator(QtGui.QMainWindow):
 		   - Action buttons
 		"""
 
-		#Defining the menu options
-		closeAction = QtGui.QAction('Close', self)
-		closeAction.setShortcut('Ctrl+Q')
-		closeAction.setStatusTip('Close Bar')
-		closeAction.triggered.connect(self.close)
-
-		menubar = self.menuBar()
-		fileMenu = menubar.addMenu('&File')
-		fileMenu.addAction(closeAction)
-
-		check_box = QtGui.QAction('Preferences', self)
-		check_box.setShortcut('Ctrl+S')
-		check_box.setStatusTip('Open preferences')
-		check_box.triggered.connect(self.show_checkbox)
-
-		settingsMenu = menubar.addMenu('&Settings')
-		settingsMenu.addAction(check_box)
+		#Defining the Main Menu
+		self.create_menu()
 
 		#Defining the panel manager
 		self.panels = PanelManager()
@@ -60,6 +45,31 @@ class PyCommanderUIGenerator(QtGui.QMainWindow):
 		self.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.action_bar)
 
 		self.show()
+
+	def create_menu(self):
+		"""This method creates the required menu options for the Main Window"""
+
+		#Defining the Close option for the menu
+		close_action = QtGui.QAction('Close', self)
+		close_action.setShortcut('Ctrl+Q')
+		close_action.setStatusTip('Close Bar')
+		close_action.triggered.connect(self.close)
+
+		#Defining the Main Menu options
+		#Adding the Close option to the File menu option
+		menu_bar = self.menuBar()
+		file_menu = menu_bar.addMenu('&File')
+		file_menu.addAction(close_action)
+
+		#Defining the Settings option for the menu
+		settings = QtGui.QAction('Preferences', self)
+		settings.setShortcut('Ctrl+S')
+		settings.setStatusTip('Open preferences')
+		settings.triggered.connect(self.show_checkbox)
+
+		#Adding the Settings option to the Preferences menu option
+		settings_action = menu_bar.addMenu('&Settings')
+		settings_action.addAction(settings)
 
 	def propagate_action(self, pressed_button):
 		"""Triggers action related to the pressed button on the focused panel
