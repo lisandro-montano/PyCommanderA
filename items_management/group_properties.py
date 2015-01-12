@@ -45,7 +45,7 @@ class GroupProperties(object):
     def get_all_properties(self):
         for file in self.list_files:
             # sum the file size
-            self.total_size = os.path.getsize(file)
+            self.total_size += os.path.getsize(file)
 
             # Verify that all files are
             if(not os.access(file, os.W_OK)):
