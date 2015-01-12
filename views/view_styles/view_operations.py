@@ -21,6 +21,7 @@ class ViewOperations(QtGui.QTableView):
 		- current_path: receives the path to be set as current e.g. "C:\"
 		"""
         super(ViewOperations, self).__init__()
+        self._observers = []
         self.selected_items = []
         self.panel_model = BaseItem(current_path)
         self.setModel(self.panel_model)
@@ -61,13 +62,15 @@ class ViewOperations(QtGui.QTableView):
 
     @QtCore.pyqtSlot(QtCore.QModelIndex)
     def update_panel_current_path(self, index):
-        """This method update the view's path, if the event was left
+        """This method update the view's path, if the event was left, only if the item is a Folder
 
         Params:
-        - index: receives the item index over which the actions will be performed
+        - index: receives the item index over which the actions will be performed (QIndex)
         """
-        if self._mouse_button == MOUSE_LEFT_CLICK_EVENT:
-            self.update_path(self.panel_model.get_item_data(index, "Path"))
+        if self.panel_model.get_item_type(index) == "Folder":
+            new_path = self.panel_model.get_item_data(index, "Path")
+            for panel_observer in self._observers:
+                panel_observer.propagate_dir(new_path)
 
     def mousePressEvent(self, event):
         """Redefining the QTableView mousePressEvent
@@ -178,3 +181,9 @@ class ViewOperations(QtGui.QTableView):
             list_path.append(current_item_name)
 
         group_property = PropertiesGroupView(self, list_path)
+
+    def attach(self, observer):
+        """Attach observers to detect directory/path changes"""
+        if not observer in self._observers:
+            self._observers.append(observer)
+
