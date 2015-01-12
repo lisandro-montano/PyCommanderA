@@ -1,20 +1,20 @@
-
 from functools import partial
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from  PyQt4.QtCore import Qt
+
 
 class ActionBar(QtGui.QDockWidget):
-
 	def __init__(self):
 		"""Initialize action bar and proper buttons
-		Set all buttons in the action bar and
-		display layout properly
-		"""
+        Set all buttons in the action bar and
+        display layout properly
+        """
 		super(ActionBar, self).__init__()
 		self.create_buttons()
 		self._observers = []
-		
+
 		self.buttons_bar = QtGui.QWidget()
 		self.buttons_layout = QtGui.QHBoxLayout()
 
@@ -32,8 +32,8 @@ class ActionBar(QtGui.QDockWidget):
 
 	def create_buttons(self):
 		"""Create buttons required for actions bar
-		Apply no focus to ensure tab only works with panels
-		"""
+        Apply no focus to ensure tab only works with panels
+        """
 		self.compare_button = QtGui.QPushButton("F3 - Compare")
 		self.compare_button.setFocusPolicy(QtCore.Qt.NoFocus)
 		self.rename_button = QtGui.QPushButton("F4 - Rename")
@@ -73,20 +73,22 @@ class ActionBar(QtGui.QDockWidget):
 			action_to_call = partial(self.propagate_action, button_action)
 			button.clicked.connect(action_to_call)
 
+
+
 	def attach(self, observer):
 		"""Attach observers to detect action triggers
-		
-		Params:
-		- observer: class that need to knows about action triggers e.g. pycommander_ui
-		"""
+
+        Params:
+        - observer: class that need to knows about action triggers e.g. pycommander_ui
+        """
 		if not observer in self._observers:
 			self._observers.append(observer)
 
 	def propagate_action(self, pressed_button):
 		"""Inform observers about actions that were triggered
 
-		Params:
-		- pressed_button: Defines the action that will be triggered e.g. "Move", "Copy" or "Delete"
-		"""
+        Params:
+        - pressed_button: Defines the action that will be triggered e.g. "Move", "Copy" or "Delete"
+        """
 		for action_observer in self._observers:
 			action_observer.propagate_action(pressed_button)

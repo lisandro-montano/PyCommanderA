@@ -1,4 +1,5 @@
-from PyQt4 import QtGui
+from PyQt4 import QtGui, Qt
+from  PyQt4.QtCore import Qt
 from PyQt4 import QtCore
 from views.panels.panel_manager import PanelManager
 from views.menus_toolbars.action_bar import ActionBar
@@ -36,6 +37,11 @@ class PyCommanderUIGenerator(QtGui.QMainWindow):
 		self.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.action_bar)
 
 		self.show()
+
+	def keyPressEvent(self, key_event):
+		"""Trigger keyboard to propagate the actions """
+		if (key_event.modifiers() == Qt.AltModifier and key_event.key() == Qt.Key_Return):
+			self.propagate_action("View Properties")
 
 	def propagate_action(self, pressed_button):
 		"""Triggers action related to the pressed button on the focused panel

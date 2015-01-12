@@ -4,11 +4,14 @@ from items_management.base_item import BaseItem
 from PyQt4.QtGui import QAbstractItemView, QTableView
 from PyQt4.QtCore import Qt
 
-#Constants
+from views.panels.properties_view import PropertiesView
+from views.panels.properties_group_view import PropertiesGroupView
+# Constants
 MOUSE_RIGHT_CLICK_EVENT = 2
 MOUSE_LEFT_CLICK_EVENT = 1
 TABLE_VIEW_COLUMN_NUMBER = 0
 TABLE_VIEW_ROW_NUMBER = 0
+
 
 class ViewOperations(QtGui.QTableView):
     def __init__(self, current_path):
@@ -106,19 +109,19 @@ class ViewOperations(QtGui.QTableView):
             self.update_item_selection_status(index)
         #If left click show a message about the event
         elif self._mouse_button == MOUSE_LEFT_CLICK_EVENT:
-        	#If the left clicked item was already selected the prompt is launched
-        	if len(self.selected_items) == 1 and index == self.selected_items[0]:
-        		#File changed and unselected
-        		self.rename_dialog(index)
+            #If the left clicked item was already selected the prompt is launched
+            if len(self.selected_items) == 1 and index == self.selected_items[0]:
+                #File changed and unselected
+                self.rename_dialog(index)
 
-        	#If not all the right selected items are removed from the list, and is selected the left clicked item
-        	elif len(self.selected_items) >= 1:
-        		#Remove all the already selected items
-        		self.selectionModel().clearSelection()
-        		#Select the left clicked item
-        		self.change_item_selection_status(index, "Select")
+            #If not all the right selected items are removed from the list, and is selected the left clicked item
+            elif len(self.selected_items) >= 1:
+                #Remove all the already selected items
+                self.selectionModel().clearSelection()
+                #Select the left clicked item
+                self.change_item_selection_status(index, "Select")
 
-		self.update_selected_items()
+            self.update_selected_items()
 
     def update_item_selection_status(self, index):
         """This method select/deselect an item base on the index sent
@@ -158,8 +161,20 @@ class ViewOperations(QtGui.QTableView):
         current_type = self.model().get_item_type(index)
         current_item_name = str(self.model().get_item_data(index, "Name"))
         new_name, ok_button_pressed = QtGui.QInputDialog.getText(self, 'Rename %s Dialog' % current_type,
-                                                  'Modify the %s name:' % current_type,
-                                                  QtGui.QLineEdit.Normal, current_item_name)
+                                                                 'Modify the %s name:' % current_type,
+                                                                 QtGui.QLineEdit.Normal, current_item_name)
 
         if ok_button_pressed == True:
             self.model().rename_item(index, new_name, current_item_name)
+
+    def view_properties(self, index):
+        current_item_name = str(self.model().get_item_data(index, "Path"))
+        item_property = PropertiesView(self, current_item_name)
+
+    def view_group_properties(self, list_index):
+        list_path = []
+        for index in list_index:
+            current_item_name = str(self.model().get_item_data(index, "Path"))
+            list_path.append(current_item_name)
+
+        group_property = PropertiesGroupView(self, list_path)
