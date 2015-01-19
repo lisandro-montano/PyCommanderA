@@ -13,6 +13,7 @@ MOVE_ITEMS = "Move"
 DELETE_ITEMS = "Delete"
 CREATE_FILES = "New File"
 RENAME_ITEMS = "Rename"
+VIEW_PROPERTIES = "View Properties"
 
 class PanelManager(QtGui.QDockWidget):
 
@@ -121,12 +122,16 @@ class PanelManager(QtGui.QDockWidget):
 		- action: action from button pressed that will trigger proper panel_operation method e.g. "Copy"
 		"""
 
-		run_action = {COMPARE_ITEMS : 'self.compare_files()',
-					  COPY_ITEMS : 'self.panel_operations.copy_items(self.origin_full_paths, self.target_path)',
-					  MOVE_ITEMS : 'self.panel_operations.move_items(self.origin_full_paths, self.target_path)',
-					  DELETE_ITEMS : 'self.confirm_items_deletion()',
-					  CREATE_FILES : 'self.new_file_dialog()',
-					  RENAME_ITEMS : 'self.rename_item_key_event()'}
+		run_action = \
+		{
+			COMPARE_ITEMS : 'self.compare_files()',
+			COPY_ITEMS : 'self.panel_operations.copy_items(self.origin_full_paths, self.target_path)',
+			MOVE_ITEMS : 'self.panel_operations.move_items(self.origin_full_paths, self.target_path)',
+			DELETE_ITEMS : 'self.confirm_items_deletion()',
+			CREATE_FILES : 'self.new_file_dialog()',
+			RENAME_ITEMS : 'self.rename_item_key_event()',
+			VIEW_PROPERTIES: 'self.view_properties_key_event()'
+		}
 
 		eval(run_action[action])
 
@@ -172,3 +177,15 @@ class PanelManager(QtGui.QDockWidget):
 		"""Open Compare files window"""
 		self.compare_window = FileCompareUI(self.left_files, self.right_files)
 		self.compare_window.compare_files()
+
+
+	def view_properties_key_event(self):
+		""" display properties of file or Folder """
+		if len(self.current_panel.panel.selectedIndexes()) == 1:
+			index = self.current_panel.panel.selectedIndexes()[0]
+			self.current_panel.panel.view_properties(index)
+
+
+		if len(self.current_panel.panel.selectedIndexes()) > 1:
+			list_index = self.current_panel.panel.selectedIndexes()
+			self.current_panel.panel.view_group_properties(list_index)
